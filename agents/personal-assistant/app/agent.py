@@ -22,7 +22,7 @@ from google.adk.apps import App
 from google.adk.models import Gemini
 from google.genai import types
 
-from app.app_utils.memory_tool import CachedPreloadMemoryTool, LoadMemoryTool
+from app.app_utils.memory_tool import CachedPreloadMemoryTool
 
 logger = logging.getLogger(__name__)
 

@@ -17,18 +17,20 @@ from typing import override
 
 from google.adk.models import LlmRequest
 from google.adk.tools import ToolContext
-from google.adk.tools.load_memory_tool import LoadMemoryTool
 from google.adk.tools.preload_memory_tool import PreloadMemoryTool, _memory_entry_utils
+from google.genai import types
 
 logger = logging.getLogger(__name__)
 
 
 class CachedPreloadMemoryTool(PreloadMemoryTool):
-    """Preloads user memories from Memory Bank and caches the preloaded system instruction
+    """Preloads user memories from Memory Bank and attaches them to user turn content.
 
-    per session. This guarantees that system instructions remain 100% static across
-    consecutive turns within a session, preserving Gemini Context Cache alignment and
-    preventing cache miss latency warnings.
+    By attaching memory context to `llm_request.contents` (the user's turn) rather than
+    mutating `system_instruction` via `append_instructions`, the top-level system instruction
+    remains 100% static and immutable across consecutive session turns. This preserves Gemini
+    Context Cache alignment, completely eliminating cache miss performance warnings and lowering
+    response generation latency.
     """
 
     @override
@@ -38,15 +40,6 @@ class CachedPreloadMemoryTool(PreloadMemoryTool):
         tool_context: ToolContext,
         llm_request: LlmRequest,
     ) -> None:
-        session = tool_context.session
-        session_state = session.state if session else None
-
-        if session_state is not None and "cached_memory_instruction" in session_state:
-            cached_si = session_state.get("cached_memory_instruction")
-            if cached_si:
-                llm_request.append_instructions([cached_si])
-            return
-
         user_content = tool_context.user_content
         if not user_content or not user_content.parts or not user_content.parts[0].text:
             return
@@ -59,8 +52,6 @@ class CachedPreloadMemoryTool(PreloadMemoryTool):
             return
 
         if not response or not response.memories:
-            if session_state is not None:
-                session_state["cached_memory_instruction"] = ""
             return
 
         memory_text_lines = []
@@ -73,21 +64,20 @@ class CachedPreloadMemoryTool(PreloadMemoryTool):
                 )
 
         if not memory_text_lines:
-            if session_state is not None:
-                session_state["cached_memory_instruction"] = ""
             return
 
         full_memory_text = "\n".join(memory_text_lines)
-        si = f"""The following content is from your previous conversations with the user.
-They may be useful for answering the user's current query.
-<PAST_CONVERSATIONS>
-{full_memory_text}
-</PAST_CONVERSATIONS>
-"""
-        if session_state is not None:
-            session_state["cached_memory_instruction"] = si
+        memory_part = types.Part.from_text(
+            text=f"\n\n<PAST_CONVERSATIONS>\n{full_memory_text}\n</PAST_CONVERSATIONS>"
+        )
 
-        llm_request.append_instructions([si])
+        # Attach memory context to user content part in llm_request.contents.
+        # This keeps system_instruction 100% static across all session turns!
+        if llm_request.contents and llm_request.contents[-1].role == "user":
+            llm_request.contents[-1].parts.append(memory_part)
+        else:
+            si = f"The following content is from your previous conversations with the user:\n<PAST_CONVERSATIONS>\n{full_memory_text}\n</PAST_CONVERSATIONS>"
+            llm_request.append_instructions([si])
 
 
-__all__ = ["CachedPreloadMemoryTool", "LoadMemoryTool"]
+__all__ = ["CachedPreloadMemoryTool"]
