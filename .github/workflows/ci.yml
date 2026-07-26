@@ -1,0 +1,37 @@
+name: CI - Test Agents
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    name: Run Pytest
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        agent: [ personal-assistant ]
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install uv
+        run: curl -LsSf https://astral.sh/uv/install.sh | sh
+
+      - name: Install Dependencies
+        run: |
+          cd agents/${{ matrix.agent }}
+          uv sync --dev
+
+      - name: Run Tests
+        run: |
+          cd agents/${{ matrix.agent }}
+          uv run pytest

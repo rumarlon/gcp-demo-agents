@@ -1,0 +1,15 @@
+name: "personal-assistant"
+acli_version: "1.2.1"
+agent_directory: "app"
+region: "us-central1"
+base_template: "adk"
+generated_at: "2026-07-25T01:40:48.425720+00:00"
+language: "python"
+create_params:
+  deployment_target: "agent_runtime"
+  session_type: "vertex_ai"
+  cicd_runner: "skip"
+  is_a2a: true
+  agent_guidance_filename: "GEMINI.md"
+  update_env_vars:
+    GOOGLE_CLOUD_AGENT_ENGINE_ID: "4339325443355181056"

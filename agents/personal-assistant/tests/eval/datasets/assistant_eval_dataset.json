@@ -1,0 +1,37 @@
+{
+  "eval_cases": [
+    {
+      "eval_case_id": "greeting_and_persona",
+      "prompt": {
+        "role": "user",
+        "parts": [
+          {
+            "text": "Hello! Can you introduce yourself and tell me what you can help me with?"
+          }
+        ]
+      }
+    },
+    {
+      "eval_case_id": "preference_recall_prompt",
+      "prompt": {
+        "role": "user",
+        "parts": [
+          {
+            "text": "Suggest 3 quick vegetarian dinner ideas for me, and keep your answer concise."
+          }
+        ]
+      }
+    },
+    {
+      "eval_case_id": "tool_calling_time_and_weather",
+      "prompt": {
+        "role": "user",
+        "parts": [
+          {
+            "text": "What is the current time and weather in San Francisco?"
+          }
+        ]
+      }
+    }
+  ]
+}
