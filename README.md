@@ -64,16 +64,16 @@ uv run agents-cli playground
 ```
 This launches the local interactive agent playground in your browser at `http://127.0.0.1:8080`.
 
-### ☁️ Cloud Deployment & Gemini Enterprise Setup
+### ☁️ Cloud Deployment & Agent Gateway Setup
 When you are ready to deploy to GCP:
 - **Vertex AI Agent Engine (Reasoning Engine)** hosting: Enable `aiplatform.googleapis.com` and run `agents-cli deploy`.
-- **Optional Gemini Enterprise Registration (100% CLI Flow)**:
-  1. Enable `discoveryengine.googleapis.com` in GCP.
-  2. Create a Gemini Enterprise engine via `gcloud alpha discoveryengine engines create`.
-  3. List existing engines and resource paths via `agents-cli publish gemini-enterprise --list`.
-  4. Register the agent via `agents-cli publish gemini-enterprise --gemini-enterprise-app-id <ENGINE_RESOURCE_PATH>`.
+- **Optional Enterprise Integration (Agent Gateway & Gemini Enterprise)**:
+  1. Enable `agentgateway.googleapis.com` in GCP.
+  2. Create or locate your Agent Gateway (`projects/<PROJECT_NUMBER>/locations/<LOCATION>/gateways/<GATEWAY_NAME>`).
+  3. Find your Gemini Enterprise App ID in the Search & Conversation console.
+  4. Run `agents-cli publish gemini-enterprise`.
 
-For detailed, step-by-step CLI commands, see [`agents/personal-assistant/README.md`](agents/personal-assistant/README.md#3-optional-register-with-gemini-enterprise-cli-instructions).
+For detailed, step-by-step instructions, see [`agents/personal-assistant/README.md`](agents/personal-assistant/README.md#3-optional-agent-gateway--gemini-enterprise-setup).
 
 ---
 

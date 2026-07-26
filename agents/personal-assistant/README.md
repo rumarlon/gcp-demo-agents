@@ -168,50 +168,32 @@ To host the agent on managed Google Cloud infrastructure:
 
 ---
 
-### 3. Optional: Register with Gemini Enterprise (CLI Instructions)
+### 3. Optional: Agent Gateway & Gemini Enterprise Setup
 
-If you want to integrate your deployed agent with **Gemini Enterprise**, you can perform all steps directly from the command line using `gcloud` and `agents-cli` without needing to use the Web UI.
+If you want to integrate your deployed agent with **Gemini Enterprise** or **Agent Gateway**, follow these setup steps:
 
-#### Step 1: Enable Discovery Engine API
+#### Prerequisites
+- A Google Cloud Project with **Gemini Enterprise** (formerly Vertex AI Search and Conversation / Agent Builder) enabled.
+- An existing Gemini Enterprise App/Engine. You can find your App ID in the [Vertex AI Search & Conversation Console](https://console.cloud.google.com/gen-app-builder/engines).
+
+#### Step 1: Create an Agent Gateway (If not already created)
+Ensure the Agent Gateway API is enabled:
 ```bash
-gcloud services enable discoveryengine.googleapis.com --project=<YOUR_PROJECT_ID>
+gcloud services enable agentgateway.googleapis.com --project=<YOUR_PROJECT_ID>
 ```
-
-#### Step 2: Create a Gemini Enterprise Engine (Using `gcloud` CLI)
-If you don't already have a Gemini Enterprise app, create one using `gcloud alpha`:
+Create an Agent Gateway instance or note your existing gateway path:
 ```bash
-gcloud alpha discoveryengine engines create my-assistant-app \
-  --project=<YOUR_PROJECT_ID> \
-  --location=us \
-  --collection=default_collection \
-  --engine-type=CHAT \
-  --display-name="My Assistant App"
+# Example Agent Gateway Resource Path:
+# projects/<YOUR_PROJECT_NUMBER>/locations/<LOCATION>/gateways/<YOUR_GATEWAY_NAME>
 ```
 
-#### Step 3: List Existing Engines (Using `agents-cli`)
-To view all available Gemini Enterprise apps and obtain their exact resource paths:
-```bash
-agents-cli publish gemini-enterprise --list --project=<YOUR_PROJECT_ID>
-```
-Output example:
-```json
-{
-  "apps": [
-    {
-      "display_name": "My Assistant App",
-      "location": "us",
-      "name": "projects/1234567890/locations/us/collections/default_collection/engines/my-assistant-app_123456"
-    }
-  ]
-}
-```
-
-#### Step 4: Register Agent with Gemini Enterprise
-Publish your deployed Reasoning Engine agent to Gemini Enterprise using the full resource path from Step 3:
+#### Step 2: Publish Agent to Gemini Enterprise
+Register your deployed Reasoning Engine with your Gemini Enterprise App and Agent Gateway:
 ```bash
 agents-cli publish gemini-enterprise \
-  --gemini-enterprise-app-id "projects/<YOUR_PROJECT_NUMBER>/locations/us/collections/default_collection/engines/<YOUR_ENGINE_ID>"
+  --app-id "projects/<YOUR_PROJECT_NUMBER>/locations/us/collections/default_collection/engines/<YOUR_APP_ID>" \
+  --agent-gateway "projects/<YOUR_PROJECT_NUMBER>/locations/<LOCATION>/gateways/<YOUR_AGENT_GATEWAY_NAME>"
 ```
 
 > [!NOTE]
-> `agents-cli publish gemini-enterprise` automatically detects your deployed agent metadata from `deployment_metadata.json` and registers it directly with Gemini Enterprise.
+> Replace `<YOUR_PROJECT_NUMBER>`, `<YOUR_LOCATION>`, `<YOUR_APP_ID>`, and `<YOUR_AGENT_GATEWAY_NAME>` with your specific GCP resource values. Do not commit actual project numbers or private gateway names to git.
