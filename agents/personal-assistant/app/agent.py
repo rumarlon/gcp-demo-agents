@@ -20,8 +20,9 @@ from google.adk.agents import Agent
 from google.adk.agents.callback_context import CallbackContext
 from google.adk.apps import App
 from google.adk.models import Gemini
-from google.adk.tools.preload_memory_tool import PreloadMemoryTool
 from google.genai import types
+
+from app.app_utils.memory_tool import CachedPreloadMemoryTool, LoadMemoryTool
 
 logger = logging.getLogger(__name__)
 
@@ -102,7 +103,7 @@ root_agent = Agent(
     tools=[
         get_weather,
         get_current_time,
-        PreloadMemoryTool(),
+        CachedPreloadMemoryTool(),
     ],
     after_agent_callback=generate_memories_callback,
 )
