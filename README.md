@@ -54,6 +54,27 @@ To develop, test, or deploy agents in this repository, ensure you have the follo
    uv tool install google-agents-cli
    ```
 
+### ⚡ Quick Start: Local Agent Playground (No Cloud Infrastructure Required)
+You can immediately clone this repository and test agents locally without creating GCP cloud resources, Agent Gateways, or Gemini Enterprise apps:
+
+```bash
+cd agents/personal-assistant
+uv sync --dev
+uv run agents-cli playground
+```
+This launches the local interactive agent playground in your browser at `http://127.0.0.1:8080`.
+
+### ☁️ Cloud Deployment & Agent Gateway Setup
+When you are ready to deploy to GCP:
+- **Vertex AI Agent Engine (Reasoning Engine)** hosting: Enable `aiplatform.googleapis.com` and run `agents-cli deploy`.
+- **Optional Enterprise Integration (Agent Gateway & Gemini Enterprise)**:
+  1. Enable `agentgateway.googleapis.com` in GCP.
+  2. Create or locate your Agent Gateway (`projects/<PROJECT_NUMBER>/locations/<LOCATION>/gateways/<GATEWAY_NAME>`).
+  3. Find your Gemini Enterprise App ID in the Search & Conversation console.
+  4. Run `agents-cli publish gemini-enterprise`.
+
+For detailed, step-by-step instructions, see [`agents/personal-assistant/README.md`](agents/personal-assistant/README.md#3-optional-agent-gateway--gemini-enterprise-setup).
+
 ---
 
 ## ➕ Adding a New Agent

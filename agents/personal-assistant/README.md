@@ -141,18 +141,59 @@ View evaluation results generated in `artifacts/grade_results/`.
 
 ---
 
-## 🚢 Deployment Guide
+## 🚢 Deployment & Integration Guide
 
-### Deploy to Vertex AI Agent Runtime
-Deploy the agent using `agents-cli`:
+### 1. Local Testing (No Cloud Setup Required)
+You do **not** need an Agent Gateway or GCP deployment to test and develop locally.
+Simply run:
 ```bash
-agents-cli deploy --no-confirm-project
+uv run agents-cli playground
+```
+This opens an interactive local chat interface at `http://127.0.0.1:8080`.
+
+---
+
+### 2. Deploy to Vertex AI Agent Engine (Reasoning Engine)
+To host the agent on managed Google Cloud infrastructure:
+
+1. **Enable Vertex AI API**:
+   ```bash
+   gcloud services enable aiplatform.googleapis.com --project=<YOUR_PROJECT_ID>
+   ```
+2. **Deploy the Agent**:
+   ```bash
+   agents-cli deploy --no-confirm-project
+   ```
+   Upon completion, `agents-cli` outputs your **Reasoning Engine Resource ID** (e.g. `projects/<PROJECT_NUMBER>/locations/us-central1/reasoningEngines/<ENGINE_ID>`).
+
+---
+
+### 3. Optional: Agent Gateway & Gemini Enterprise Setup
+
+If you want to integrate your deployed agent with **Gemini Enterprise** or **Agent Gateway**, follow these setup steps:
+
+#### Prerequisites
+- A Google Cloud Project with **Gemini Enterprise** (formerly Vertex AI Search and Conversation / Agent Builder) enabled.
+- An existing Gemini Enterprise App/Engine. You can find your App ID in the [Vertex AI Search & Conversation Console](https://console.cloud.google.com/gen-app-builder/engines).
+
+#### Step 1: Create an Agent Gateway (If not already created)
+Ensure the Agent Gateway API is enabled:
+```bash
+gcloud services enable agentgateway.googleapis.com --project=<YOUR_PROJECT_ID>
+```
+Create an Agent Gateway instance or note your existing gateway path:
+```bash
+# Example Agent Gateway Resource Path:
+# projects/<YOUR_PROJECT_NUMBER>/locations/<LOCATION>/gateways/<YOUR_GATEWAY_NAME>
 ```
 
-### Register with Gemini Enterprise
-Publish the deployed agent to your Gemini Enterprise App:
+#### Step 2: Publish Agent to Gemini Enterprise
+Register your deployed Reasoning Engine with your Gemini Enterprise App and Agent Gateway:
 ```bash
 agents-cli publish gemini-enterprise \
   --app-id "projects/<YOUR_PROJECT_NUMBER>/locations/us/collections/default_collection/engines/<YOUR_APP_ID>" \
   --agent-gateway "projects/<YOUR_PROJECT_NUMBER>/locations/<LOCATION>/gateways/<YOUR_AGENT_GATEWAY_NAME>"
 ```
+
+> [!NOTE]
+> Replace `<YOUR_PROJECT_NUMBER>`, `<YOUR_LOCATION>`, `<YOUR_APP_ID>`, and `<YOUR_AGENT_GATEWAY_NAME>` with your specific GCP resource values. Do not commit actual project numbers or private gateway names to git.
