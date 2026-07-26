@@ -40,6 +40,21 @@ class CachedPreloadMemoryTool(PreloadMemoryTool):
         tool_context: ToolContext,
         llm_request: LlmRequest,
     ) -> None:
+        if not llm_request.contents:
+            return
+
+        last_content = llm_request.contents[-1]
+        if last_content.role != "user" or not last_content.parts:
+            return
+
+        # Do NOT attach memory on tool execution turns (which contain function_response or function_call)
+        if any(p.function_response or p.function_call for p in last_content.parts):
+            return
+
+        # Do NOT attach duplicate memory if already injected into this turn
+        if any(p.text and "<PAST_CONVERSATIONS>" in p.text for p in last_content.parts):
+            return
+
         user_content = tool_context.user_content
         if not user_content or not user_content.parts or not user_content.parts[0].text:
             return
@@ -71,13 +86,7 @@ class CachedPreloadMemoryTool(PreloadMemoryTool):
             text=f"\n\n<PAST_CONVERSATIONS>\n{full_memory_text}\n</PAST_CONVERSATIONS>"
         )
 
-        # Attach memory context to user content part in llm_request.contents.
-        # This keeps system_instruction 100% static across all session turns!
-        if llm_request.contents and llm_request.contents[-1].role == "user":
-            llm_request.contents[-1].parts.append(memory_part)
-        else:
-            si = f"The following content is from your previous conversations with the user:\n<PAST_CONVERSATIONS>\n{full_memory_text}\n</PAST_CONVERSATIONS>"
-            llm_request.append_instructions([si])
+        last_content.parts.append(memory_part)
 
 
 __all__ = ["CachedPreloadMemoryTool"]
