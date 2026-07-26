@@ -31,7 +31,7 @@ def evaluate(instance):
     prompt += f"Full Agent Trace: {instance.get('agent_data', '')}\n"
 
     import os
-    project = os.environ.get("GOOGLE_CLOUD_PROJECT", "zen-turing")
+    project = os.environ.get("GOOGLE_CLOUD_PROJECT")
     location = os.environ.get("GOOGLE_CLOUD_LOCATION", "us-central1")
     client = genai.Client(vertexai=True, project=project, location=location)
     response = client.models.generate_content(

@@ -71,7 +71,7 @@ sequenceDiagram
 | **Vertex AI Memory Bank Service** | [`app/app_utils/services.py`](app/app_utils/services.py) | Stores extracted long-term memories (user preferences, facts) across deployments. |
 | **Vertex AI Session Service** | [`app/app_utils/services.py`](app/app_utils/services.py) | Manages multi-turn conversation sessions persistently. |
 | **Gemini 3.6 Flash (`gemini-3.6-flash`)** | [`app/agent.py`](app/agent.py) | Core Large Language Model for reasoning, text generation, and function calling. |
-| **Gemini Enterprise & Agent Gateway** | `agent-gw-002` | Exposes the agent to enterprise chat apps (`personal-assist-memory`). |
+| **Gemini Enterprise & Agent Gateway** | User Defined | Exposes the agent to enterprise chat apps and gateways. |
 | **Cloud Logging & OpenTelemetry** | [`app/fast_api_app.py`](app/fast_api_app.py) | Structured logging, error collection, and open-telemetry tracing in GCP Console. |
 
 ---
@@ -102,7 +102,7 @@ cp .env.example .env
 
 `.env` example content:
 ```env
-GOOGLE_CLOUD_PROJECT=zen-turing
+GOOGLE_CLOUD_PROJECT=<YOUR_PROJECT_ID>
 GOOGLE_CLOUD_LOCATION=us-central1
 GOOGLE_GENAI_USE_VERTEXAI=true
 MODEL_NAME=gemini-3.6-flash
@@ -150,6 +150,6 @@ agents-cli deploy --no-confirm-project
 Publish the deployed agent to your Gemini Enterprise App:
 ```bash
 agents-cli publish gemini-enterprise \
-  --app-id "projects/924128829435/locations/us/collections/default_collection/engines/personal-assist-memory_1785004835401" \
-  --agent-gateway "projects/924128829435/locations/us-central1/gateways/agent-gw-002"
+  --app-id "projects/<YOUR_PROJECT_NUMBER>/locations/us/collections/default_collection/engines/<YOUR_APP_ID>" \
+  --agent-gateway "projects/<YOUR_PROJECT_NUMBER>/locations/<LOCATION>/gateways/<YOUR_AGENT_GATEWAY_NAME>"
 ```
