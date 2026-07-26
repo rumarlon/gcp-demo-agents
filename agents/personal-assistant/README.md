@@ -114,11 +114,12 @@ uv sync --dev
 ```
 
 ### 3. Run Local Agent Playground
-Launch the interactive web-based Agent Playground locally using `agents-cli`:
+Launch the interactive web-based Agent Playground locally using `uv run` (to ensure SSL certificates and virtualenv dependencies are loaded):
 ```bash
-agents-cli playground
+uv run agents-cli playground
 ```
-This opens an interactive local chat interface in your browser to interact with the agent, test tool calls, and inspect session state.
+This opens an interactive local chat interface in your browser at `http://127.0.0.1:8080` to interact with the agent, test tool calls, and inspect session state.
+
 
 
 ---
