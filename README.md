@@ -69,11 +69,11 @@ When you are ready to deploy to GCP:
 - **Vertex AI Agent Engine (Reasoning Engine)** hosting: Enable `aiplatform.googleapis.com` and run `agents-cli deploy`.
 - **Optional Enterprise Integration (Agent Gateway & Gemini Enterprise)**:
   1. Enable `agentgateway.googleapis.com` in GCP.
-  2. Create or locate your Agent Gateway (`projects/<PROJECT_NUMBER>/locations/<LOCATION>/gateways/<GATEWAY_NAME>`).
+  2. Create an Agent Gateway via `curl` REST API or `gcloud`: `https://agentgateway.googleapis.com/v1/projects/<PROJECT_ID>/locations/us-central1/gateways?gatewayId=<GATEWAY_NAME>`.
   3. Find your Gemini Enterprise App ID in the Search & Conversation console.
   4. Run `agents-cli publish gemini-enterprise`.
 
-For detailed, step-by-step instructions, see [`agents/personal-assistant/README.md`](agents/personal-assistant/README.md#3-optional-agent-gateway--gemini-enterprise-setup).
+For detailed, step-by-step creation commands, see [`agents/personal-assistant/README.md`](agents/personal-assistant/README.md#step-1-create-an-agent-gateway-using-gcloud--rest-api).
 
 ---
 

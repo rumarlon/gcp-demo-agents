@@ -176,16 +176,27 @@ If you want to integrate your deployed agent with **Gemini Enterprise** or **Age
 - A Google Cloud Project with **Gemini Enterprise** (formerly Vertex AI Search and Conversation / Agent Builder) enabled.
 - An existing Gemini Enterprise App/Engine. You can find your App ID in the [Vertex AI Search & Conversation Console](https://console.cloud.google.com/gen-app-builder/engines).
 
-#### Step 1: Create an Agent Gateway (If not already created)
-Ensure the Agent Gateway API is enabled:
-```bash
-gcloud services enable agentgateway.googleapis.com --project=<YOUR_PROJECT_ID>
-```
-Create an Agent Gateway instance or note your existing gateway path:
-```bash
-# Example Agent Gateway Resource Path:
-# projects/<YOUR_PROJECT_NUMBER>/locations/<LOCATION>/gateways/<YOUR_GATEWAY_NAME>
-```
+#### Step 1: Create an Agent Gateway (Using `gcloud` / REST API)
+1. **Enable the Agent Gateway API**:
+   ```bash
+   gcloud services enable agentgateway.googleapis.com --project=<YOUR_PROJECT_ID>
+   ```
+
+2. **Create an Agent Gateway Instance via `curl` REST API**:
+   ```bash
+   curl -X POST \
+     -H "Authorization: Bearer $(gcloud auth print-access-token)" \
+     -H "Content-Type: application/json" \
+     "https://agentgateway.googleapis.com/v1/projects/<YOUR_PROJECT_ID>/locations/us-central1/gateways?gatewayId=<YOUR_GATEWAY_NAME>" \
+     -d '{
+       "displayName": "My Agent Gateway",
+       "description": "Agent Gateway for inter-agent A2A routing"
+     }'
+   ```
+
+3. **Obtain Gateway Resource Path**:
+   Your created Agent Gateway resource path follows this format:
+   `projects/<YOUR_PROJECT_NUMBER>/locations/us-central1/gateways/<YOUR_GATEWAY_NAME>`
 
 #### Step 2: Publish Agent to Gemini Enterprise
 Register your deployed Reasoning Engine with your Gemini Enterprise App and Agent Gateway:
