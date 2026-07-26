@@ -113,11 +113,13 @@ MODEL_NAME=gemini-3.6-flash
 uv sync --dev
 ```
 
-### 3. Run Local FastAPI Development Server
+### 3. Run Local Agent Playground
+Launch the interactive web-based Agent Playground locally using `agents-cli`:
 ```bash
-uv run python -m app.fast_api_app
+agents-cli playground
 ```
-The server will start at `http://localhost:8000`. You can inspect the OpenAPI documentation at `http://localhost:8000/docs`.
+This opens an interactive local chat interface in your browser to interact with the agent, test tool calls, and inspect session state.
+
 
 ---
 
