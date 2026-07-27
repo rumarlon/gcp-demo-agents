@@ -52,7 +52,15 @@ To develop, test, or deploy agents in this repository, ensure you have the follo
    gcloud auth login
    gcloud auth application-default login
    ```
-3. **Google Agents CLI (`agents-cli`)**:
+3. **Google Antigravity (`agy`)** (Optional AI Pair Programmer):
+   - **Desktop App**: Download and launch the Google Antigravity desktop app from [antigravity.google/download](https://antigravity.google/download).
+   - **Antigravity CLI (`agy`)**: Install and run `agy` directly in your terminal:
+     ```bash
+     uv tool install agy
+     # Launch agy in your terminal:
+     agy
+     ```
+4. **Google Agents CLI (`agents-cli`)**:
    ```bash
    uv tool install google-agents-cli
    ```
