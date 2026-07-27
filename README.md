@@ -1,4 +1,4 @@
-# Google Cloud AI Agents Repository (`gcp-agents`)
+# Google Cloud AI Agents Repository
 
 > [!IMPORTANT]
 > **Disclaimer & Usage Notice**: This repository and its sample code are provided "as-is" for educational and demonstration purposes, without warranty or liability of any kind. Executing, testing, or deploying these agents may incur Google Cloud Platform (GCP) charges (such as Vertex AI API calls, Reasoning Engine deployments, or Memory Bank usage). Please monitor your GCP billing dashboard and resource usage accordingly.
