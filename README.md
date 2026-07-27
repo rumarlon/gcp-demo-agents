@@ -40,7 +40,7 @@ gcp-agents/
         ├── pyproject.toml         # Python project dependencies (managed by uv)
         ├── Dockerfile             # Container definition
         ├── GEMINI.md              # Agent system prompt & personality guidance
-        ├── vibe-agent.md          # Step-by-step vibe coding guide with agy prompts
+        ├── vibe-agent.md          # Step-by-step vibe coding guide for this app with agy
         └── README.md              # Detailed Agent documentation & architecture diagram
 ```
 
