@@ -1,5 +1,8 @@
 # Google Cloud AI Agents Repository (`gcp-agents`)
 
+> [!IMPORTANT]
+> **Disclaimer & Usage Notice**: This repository and its sample code are provided "as-is" for educational and demonstration purposes, without warranty or liability of any kind. Executing, testing, or deploying these agents may incur Google Cloud Platform (GCP) charges (such as Vertex AI API calls, Reasoning Engine deployments, or Memory Bank usage). Please monitor your GCP billing dashboard and resource usage accordingly.
+
 Welcome to the **gcp-agents** repository! This repository hosts a collection of production-ready AI agents built with the [Google Agent Development Kit (ADK)](https://github.com/google/adk) and deployed on **Google Cloud Platform (GCP)** via **Vertex AI Agent Engine (Reasoning Engine)**, **Agent Gateway**, and **Gemini Enterprise**.
 
 Each agent in this repository is designed as an isolated, modular subproject with its own dependencies, tests, deployment configuration, and documentation.
