@@ -13,7 +13,7 @@ Each agent in this repository is designed as an isolated, modular subproject wit
 
 | Agent Name | Folder Path | Description | Key GCP Services |
 | :--- | :--- | :--- | :--- |
-| **Personal Assistant** | [`agents/personal-assistant/`](agents/personal-assistant/README.md) | Warm, responsive AI assistant with persistent long-term memory, real-time tools (time, weather), and Agent-to-Agent (A2A) support. | Vertex AI Agent Engine, Memory Bank, Gemini Enterprise |
+| **Personal Assistant** | [`agents/personal-assistant/`](agents/personal-assistant/README.md) | Warm, responsive AI assistant with persistent long-term memory, real-time tools (time, weather), and Agent-to-Agent (A2A) support. | Vertex AI Agent Engine, Memory Bank, Model Armor, Gemini Enterprise |
 
 ---
 

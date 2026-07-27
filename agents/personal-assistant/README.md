@@ -71,6 +71,7 @@ sequenceDiagram
 | Google Cloud Service | Component / File | Purpose & Role |
 | :--- | :--- | :--- |
 | **Vertex AI Agent Engine (Reasoning Engine)** | [`deployment_metadata.json`](deployment_metadata.json) | Managed cloud runtime that hosts and runs the agent container in `us-central1`. |
+| **Google Cloud Model Armor** | [`app/app_utils/model_armor_plugin.py`](app/app_utils/model_armor_plugin.py) | Security screening service protecting prompts and LLM outputs against prompt injection, jailbreaks, PII leakage, CSAM, and malicious URLs. |
 | **Vertex AI Memory Bank Service** | [`app/app_utils/services.py`](app/app_utils/services.py) | Stores extracted long-term memories (user preferences, facts) across deployments. |
 | **Vertex AI Session Service** | [`app/app_utils/services.py`](app/app_utils/services.py) | Manages multi-turn conversation sessions persistently. |
 | **Gemini 3.6 Flash (`gemini-3.6-flash`)** | [`app/agent.py`](app/agent.py) | Core Large Language Model for reasoning, text generation, and function calling. |
