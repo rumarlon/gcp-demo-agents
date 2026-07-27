@@ -30,10 +30,17 @@ gcp-agents/
 └── agents/                        # Container folder for all AI agents
     └── personal-assistant/        # Personal Assistant Agent
         ├── app/                   # Agent source code (ADK agent & FastAPI server)
+        │   ├── agent.py           # ADK App & Root Agent definition
+        │   ├── fast_api_app.py    # FastAPI server & A2A protocol router
+        │   └── app_utils/         # Helpers, Memory Bank tools, & plugins
+        │       └── model_armor_plugin.py # Google Cloud Model Armor security plugin
         ├── tests/                 # Integration and unit test suite
+        ├── deployment_metadata.json # Deployment target metadata for agents-cli
+        ├── agents-cli-manifest.yaml # agents-cli project manifest
         ├── pyproject.toml         # Python project dependencies (managed by uv)
         ├── Dockerfile             # Container definition
         ├── GEMINI.md              # Agent system prompt & personality guidance
+        ├── vibe-agent.md          # Step-by-step vibe coding guide with agy prompts
         └── README.md              # Detailed Agent documentation & architecture diagram
 ```
 
