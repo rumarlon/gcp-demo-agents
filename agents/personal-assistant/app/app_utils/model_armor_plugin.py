@@ -75,7 +75,11 @@ class ModelArmorPlugin(BasePlugin):
         return None
 
     async def before_model_callback(
-        self, agent: Any, llm_request: Any, **kwargs: Any
+        self,
+        agent: Any = None,
+        callback_context: Any = None,
+        llm_request: Any = None,
+        **kwargs: Any,
     ) -> Optional[Any]:
         """Sanitizes user prompt turns using Model Armor before sending to LLM."""
         if not self.template_name or not self.client:
@@ -85,10 +89,11 @@ class ModelArmorPlugin(BasePlugin):
             return None
 
         # Extract last user message
-        if not llm_request.contents:
+        req_obj = llm_request or getattr(callback_context, "llm_request", None)
+        if not req_obj or not getattr(req_obj, "contents", None):
             return None
 
-        last_content = llm_request.contents[-1]
+        last_content = req_obj.contents[-1]
         if getattr(last_content, "role", None) != "user":
             return None
 
@@ -134,13 +139,18 @@ class ModelArmorPlugin(BasePlugin):
         return None
 
     async def after_model_callback(
-        self, agent: Any, llm_response: Any, **kwargs: Any
+        self,
+        agent: Any = None,
+        callback_context: Any = None,
+        llm_response: Any = None,
+        **kwargs: Any,
     ) -> Optional[Any]:
         """Inspects model response output for security or sensitivity violations."""
-        if not self.template_name or not self.client or not llm_response:
+        resp_obj = llm_response or getattr(callback_context, "llm_response", None)
+        if not self.template_name or not self.client or not resp_obj:
             return None
 
-        response_text = getattr(llm_response, "text", None)
+        response_text = getattr(resp_obj, "text", None)
         if not response_text:
             return None
 
