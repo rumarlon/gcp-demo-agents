@@ -23,11 +23,11 @@ While `agy` does the coding, this guide explains **exactly what is happening beh
 
 1. **Set Up Google Antigravity (`agy`)**:
    Choose one of the following options to run Antigravity:
-   - **Option A: Google Antigravity Desktop App / IDE**: Download and open the standalone Antigravity IDE application on your machine.
+   - **Option A: Google Antigravity Desktop App**: Download and launch the Antigravity desktop app from [antigravity.google/download](https://antigravity.google/download).
    - **Option B: Antigravity CLI (`agy`)**: Install and run `agy` directly in your terminal:
      ```bash
      uv tool install agy
-     # Or launch agy directly:
+     # Launch agy in your terminal:
      agy
      ```
 
