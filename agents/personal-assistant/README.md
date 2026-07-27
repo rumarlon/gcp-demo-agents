@@ -89,7 +89,7 @@ sequenceDiagram
 - **Google Antigravity (`agy`)**: (Optional but recommended)
   - **Desktop App**: Download from [antigravity.google/download](https://antigravity.google/download)
   - **Antigravity CLI**: `uv tool install agy` (launch with `agy` in terminal)
-- **Google Agents CLI (`agents-cli`)**: `uv tool install google-agents-cli`
+- **Google Agents CLI (`agents-cli`)**: `uv tool install google-agents-cli` (then run `agents-cli setup` to auto-install ADK skills)
 
 ### Google Cloud Permissions
 Your GCP identity / Service Account requires the following IAM roles:

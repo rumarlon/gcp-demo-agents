@@ -77,6 +77,9 @@ gcp-agents/
 5. **Google Agents CLI (`agents-cli`)**:
    ```bash
    uv tool install google-agents-cli
+
+   # Automatically install ADK skills to detected coding agents (Antigravity agy, Claude Code, Cursor, etc.):
+   agents-cli setup
    ```
 
 ### ⚡ Quick Start: Local Agent Playground (No Cloud Infrastructure Required)
