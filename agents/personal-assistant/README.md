@@ -211,3 +211,51 @@ agents-cli publish gemini-enterprise \
 
 > [!NOTE]
 > Replace `<YOUR_PROJECT_NUMBER>`, `<YOUR_LOCATION>`, `<YOUR_APP_ID>`, and `<YOUR_AGENT_GATEWAY_NAME>` with your specific GCP resource values. Do not commit actual project numbers or private gateway names to git.
+
+---
+
+## 🛡️ Security & Model Armor Integration
+
+To protect your agent against **prompt injection, jailbreaks, PII/sensitive data leakage, CSAM, and malicious URLs**, Google Cloud Model Armor is configured at both the Gemini Enterprise App level and the ADK Agent Runtime level.
+
+### 1. Gemini Enterprise App Model Armor Configuration
+
+You can enable Model Armor directly on your Gemini Enterprise App engine:
+
+- **App Engine ID**: `personal-assist-memory_1785004835401`
+- **Project**: `zen-turing`
+- **Location**: `us`
+- **Direct Console Link**: [Gemini Enterprise Security Configuration Console](https://console.cloud.google.com/gemini-enterprise/locations/us/engines/personal-assist-memory_1785004835401/security/configuration?authuser=0&project=zen-turing)
+
+#### CLI Setup via `gcloud`
+1. **Enable Model Armor API**:
+   ```bash
+   gcloud services enable modelarmor.googleapis.com --project=zen-turing
+   ```
+
+2. **Create a Model Armor Security Template**:
+   ```bash
+   gcloud model-armor templates create personal-assistant-security-template \
+     --project=zen-turing \
+     --location=us \
+     --filter-config="pi_and_jailbreak_filter_settings={confidence_level=HIGH}"
+   ```
+
+3. **Link Template to Gemini Enterprise Engine**:
+   Attach the created template (`projects/zen-turing/locations/us/templates/personal-assistant-security-template`) under your Gemini Enterprise Security Configuration in the Google Cloud Console.
+
+### 2. ADK Plugin Backend Protection (`ModelArmorPlugin`)
+
+The ADK agent runtime incorporates [`ModelArmorPlugin`](app/app_utils/model_armor_plugin.py) via ADK `BasePlugin`:
+
+- **Environment Variables**:
+  ```env
+  MODEL_ARMOR_PROJECT_ID=zen-turing
+  MODEL_ARMOR_LOCATION=us
+  MODEL_ARMOR_TEMPLATE_ID=personal-assistant-security-template
+  MODEL_ARMOR_STRICT_MODE=false
+  ```
+- **Behavior**:
+  - `before_model_callback`: Calls `SanitizeUserPrompt` to inspect incoming user prompts.
+  - `after_model_callback`: Calls `SanitizeModelResponse` to inspect outgoing model outputs.
+  - **Graceful Fallback**: If Model Armor is unconfigured in local offline testing, the plugin logs a debug notice and allows traffic to pass without interruption.

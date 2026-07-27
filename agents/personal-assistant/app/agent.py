@@ -23,6 +23,7 @@ from google.adk.models import Gemini
 from google.genai import types
 
 from app.app_utils.memory_tool import CachedPreloadMemoryTool
+from app.app_utils.model_armor_plugin import ModelArmorPlugin
 
 logger = logging.getLogger(__name__)
 
@@ -110,4 +111,7 @@ root_agent = Agent(
 app = App(
     root_agent=root_agent,
     name="app",
+    plugins=[
+        ModelArmorPlugin(),
+    ],
 )
