@@ -222,27 +222,31 @@ To protect your agent against **prompt injection, jailbreaks, PII/sensitive data
 
 You can enable Model Armor directly on your Gemini Enterprise App engine:
 
-- **App Engine ID**: `personal-assist-memory_1785004835401`
-- **Project**: `zen-turing`
-- **Location**: `us`
-- **Direct Console Link**: [Gemini Enterprise Security Configuration Console](https://console.cloud.google.com/gemini-enterprise/locations/us/engines/personal-assist-memory_1785004835401/security/configuration?authuser=0&project=zen-turing)
+- **App Engine ID**: `<YOUR_APP_ID>`
+- **Project**: `<YOUR_PROJECT_ID>`
+- **Location**: `<YOUR_LOCATION>`
+- **Full Template Resource Path**:
+  ```text
+  projects/<YOUR_PROJECT_ID>/locations/<YOUR_LOCATION>/templates/<YOUR_TEMPLATE_ID>
+  ```
+- **Direct Console Link**: `https://console.cloud.google.com/gemini-enterprise/locations/<YOUR_LOCATION>/engines/<YOUR_APP_ID>/security/configuration?project=<YOUR_PROJECT_ID>`
 
 #### CLI Setup via `gcloud`
 1. **Enable Model Armor API**:
    ```bash
-   gcloud services enable modelarmor.googleapis.com --project=zen-turing
+   gcloud services enable modelarmor.googleapis.com --project=<YOUR_PROJECT_ID>
    ```
 
 2. **Create a Model Armor Security Template**:
    ```bash
-   gcloud model-armor templates create personal-assistant-security-template \
-     --project=zen-turing \
-     --location=us \
+   gcloud model-armor templates create <YOUR_TEMPLATE_ID> \
+     --project=<YOUR_PROJECT_ID> \
+     --location=<YOUR_LOCATION> \
      --filter-config="pi_and_jailbreak_filter_settings={confidence_level=HIGH}"
    ```
 
 3. **Link Template to Gemini Enterprise Engine**:
-   Attach the created template (`projects/zen-turing/locations/us/templates/personal-assistant-security-template`) under your Gemini Enterprise Security Configuration in the Google Cloud Console.
+   In the [Gemini Enterprise Security Configuration Console](https://console.cloud.google.com/gemini-enterprise/locations/<YOUR_LOCATION>/engines/<YOUR_APP_ID>/security/configuration?project=<YOUR_PROJECT_ID>), select your created template (`projects/<YOUR_PROJECT_ID>/locations/<YOUR_LOCATION>/templates/<YOUR_TEMPLATE_ID>`) under **User Prompt Template** and **Response Template**.
 
 ### 2. ADK Plugin Backend Protection (`ModelArmorPlugin`)
 
@@ -250,9 +254,9 @@ The ADK agent runtime incorporates [`ModelArmorPlugin`](app/app_utils/model_armo
 
 - **Environment Variables**:
   ```env
-  MODEL_ARMOR_PROJECT_ID=zen-turing
-  MODEL_ARMOR_LOCATION=us
-  MODEL_ARMOR_TEMPLATE_ID=personal-assistant-security-template
+  MODEL_ARMOR_PROJECT_ID=<YOUR_PROJECT_ID>
+  MODEL_ARMOR_LOCATION=<YOUR_LOCATION>
+  MODEL_ARMOR_TEMPLATE_ID=<YOUR_TEMPLATE_ID>
   MODEL_ARMOR_STRICT_MODE=false
   ```
 - **Behavior**:

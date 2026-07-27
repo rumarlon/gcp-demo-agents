@@ -57,7 +57,7 @@ async def test_model_armor_plugin_bypasses_when_unconfigured():
 @pytest.mark.asyncio
 async def test_model_armor_plugin_allows_safe_prompt():
     plugin = ModelArmorPlugin(
-        project_id="zen-turing",
+        project_id="my-gcp-project",
         location="us",
         template_id="test-template",
         strict_mode=True,
@@ -79,7 +79,7 @@ async def test_model_armor_plugin_allows_safe_prompt():
 @pytest.mark.asyncio
 async def test_model_armor_plugin_blocks_flagged_prompt_in_strict_mode():
     plugin = ModelArmorPlugin(
-        project_id="zen-turing",
+        project_id="my-gcp-project",
         location="us",
         template_id="test-template",
         strict_mode=True,
@@ -104,7 +104,7 @@ async def test_model_armor_plugin_blocks_flagged_prompt_in_strict_mode():
 @pytest.mark.asyncio
 async def test_model_armor_plugin_sanitizes_model_response():
     plugin = ModelArmorPlugin(
-        project_id="zen-turing",
+        project_id="my-gcp-project",
         location="us",
         template_id="test-template",
     )

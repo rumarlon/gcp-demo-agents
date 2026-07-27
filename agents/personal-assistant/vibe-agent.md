@@ -148,7 +148,7 @@ While `agy` does the coding, this guide explains **exactly what is happening beh
 
 > 💬 **Copy & Paste this `agy` prompt into Antigravity:**
 > ```text
-> Use the google-agents-cli-deploy skill to deploy the personal-assistant agent to Vertex AI Agent Runtime in project '924128829435' and region 'us-central1'. Once deployed, show me the Agent Card URL.
+> Use the google-agents-cli-deploy skill to deploy the personal-assistant agent to Vertex AI Agent Runtime in project '<YOUR_PROJECT_ID>' and region '<YOUR_LOCATION>'. Once deployed, show me the Agent Card URL.
 > ```
 
 #### 🔍 Behind the Scenes (What `agy` and `agents-cli` are doing):
@@ -167,12 +167,12 @@ While `agy` does the coding, this guide explains **exactly what is happening beh
 > 1. Create ModelArmorPlugin in app/app_utils/model_armor_plugin.py using ADK BasePlugin hooks (before_model_callback and after_model_callback) calling google-cloud-modelarmor.
 > 2. Register ModelArmorPlugin in app/agent.py under App(plugins=[...]).
 > 3. Add unit tests in tests/unit/test_model_armor_plugin.py verifying prompt sanitization and fallback when unconfigured.
-> 4. Document Gemini Enterprise Model Armor configuration for engine personal-assist-memory_1785004835401 in project zen-turing.
+> 4. Document Gemini Enterprise Model Armor configuration for engine <YOUR_APP_ID> in project <YOUR_PROJECT_ID>.
 > ```
 
 #### 🔍 Behind the Scenes (What `agy` and `agents-cli` are doing):
 1. **Model Armor ADK Plugin (`ModelArmorPlugin`)**: Intercepts LLM inference calls before execution to call `SanitizeUserPrompt` and `SanitizeModelResponse` REST APIs.
-2. **Gemini Enterprise Security Integration**: Links Model Armor security templates directly to your Gemini Enterprise App engine in project `zen-turing`. Direct link: [Gemini Enterprise Security Configuration Console](https://console.cloud.google.com/gemini-enterprise/locations/us/engines/personal-assist-memory_1785004835401/security/configuration?authuser=0&project=zen-turing).
+2. **Gemini Enterprise Security Integration**: Links Model Armor security templates (`projects/<YOUR_PROJECT_ID>/locations/<YOUR_LOCATION>/templates/<YOUR_TEMPLATE_ID>`) directly to your Gemini Enterprise App engine. Direct link: `https://console.cloud.google.com/gemini-enterprise/locations/<YOUR_LOCATION>/engines/<YOUR_APP_ID>/security/configuration?project=<YOUR_PROJECT_ID>`.
 3. **Non-blocking Dev Fallback**: In local dev and unit testing where Model Armor credentials are not present, the plugin gracefully logs warnings without crashing your local playground session!
 
 ---

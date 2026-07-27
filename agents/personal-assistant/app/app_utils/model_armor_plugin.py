@@ -41,7 +41,7 @@ class ModelArmorPlugin(BasePlugin):
         super().__init__(name=name)
 
         self.project_id = project_id or os.getenv(
-            "MODEL_ARMOR_PROJECT_ID", os.getenv("GOOGLE_CLOUD_PROJECT", "zen-turing")
+            "MODEL_ARMOR_PROJECT_ID", os.getenv("GOOGLE_CLOUD_PROJECT")
         )
         self.location = location or os.getenv("MODEL_ARMOR_LOCATION", "us")
         self.template_id = template_id or os.getenv("MODEL_ARMOR_TEMPLATE_ID")
