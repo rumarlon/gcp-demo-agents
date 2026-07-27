@@ -67,9 +67,7 @@ class IntentOutcomeObservabilityPlugin(BasePlugin):
         req_obj = llm_request or getattr(callback_context, "llm_request", None)
         agent_name = getattr(agent, "name", "root_agent") if agent else "root_agent"
         session_id = (
-            getattr(callback_context, "session_id", None)
-            if callback_context
-            else None
+            getattr(callback_context, "session_id", None) if callback_context else None
         )
 
         user_query = ""
@@ -117,9 +115,7 @@ class IntentOutcomeObservabilityPlugin(BasePlugin):
         resp_obj = llm_response or getattr(callback_context, "llm_response", None)
         agent_name = getattr(agent, "name", "root_agent") if agent else "root_agent"
         session_id = (
-            getattr(callback_context, "session_id", None)
-            if callback_context
-            else None
+            getattr(callback_context, "session_id", None) if callback_context else None
         )
 
         # Calculate latency
@@ -128,9 +124,7 @@ class IntentOutcomeObservabilityPlugin(BasePlugin):
             if callback_context
             else None
         )
-        latency_ms = (
-            round((time.time() - start_time) * 1000, 2) if start_time else None
-        )
+        latency_ms = round((time.time() - start_time) * 1000, 2) if start_time else None
 
         response_text = getattr(resp_obj, "text", None) if resp_obj else None
         status = "success" if response_text else "empty_or_error"
@@ -199,9 +193,7 @@ def track_tool_intent_outcome(func: Callable) -> Callable:
                 "result_summary": str(result)[:300],
                 "timestamp": time.time(),
             }
-            logger.log(
-                LOG_LEVEL, f"TOOL OUTCOME: {json.dumps(outcome_payload)}"
-            )
+            logger.log(LOG_LEVEL, f"TOOL OUTCOME: {json.dumps(outcome_payload)}")
 
             if span:
                 span.set_attribute("tool.outcome.status", status)
