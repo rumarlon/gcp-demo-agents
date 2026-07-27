@@ -32,11 +32,13 @@ class ModelArmorPlugin(BasePlugin):
 
     def __init__(
         self,
+        name: str = "model_armor_plugin",
         project_id: Optional[str] = None,
         location: Optional[str] = None,
         template_id: Optional[str] = None,
         strict_mode: bool = False,
     ):
+        super().__init__(name=name)
 
         self.project_id = project_id or os.getenv(
             "MODEL_ARMOR_PROJECT_ID", os.getenv("GOOGLE_CLOUD_PROJECT", "zen-turing")
