@@ -215,7 +215,7 @@ agents-cli publish gemini-enterprise \
 
 ---
 
-## 🛡️ Security & Model Armor Integration
+## 🛡️ Security & Model Armor Integration (Optional)
 
 To protect your agent against **prompt injection, jailbreaks, PII/sensitive data leakage, CSAM, and malicious URLs**, Google Cloud Model Armor is configured at both the Gemini Enterprise App level and the ADK Agent Runtime level.
 

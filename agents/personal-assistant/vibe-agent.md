@@ -158,7 +158,7 @@ While `agy` does the coding, this guide explains **exactly what is happening beh
 
 ---
 
-### Step 7: Secure Agent with Gemini Enterprise Model Armor
+### Step 7: Secure Agent with Gemini Enterprise Model Armor (Optional)
 
 **Goal**: Screen user prompts and LLM outputs against prompt injection, jailbreaking, PII leakage, and CSAM using Google Cloud Model Armor.
 
