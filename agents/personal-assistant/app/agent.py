@@ -24,6 +24,7 @@ from google.genai import types
 
 from app.app_utils.memory_tool import CachedPreloadMemoryTool
 from app.app_utils.model_armor_plugin import ModelArmorPlugin
+from app.app_utils.observability_plugin import IntentOutcomeObservabilityPlugin
 from app.app_utils.tools import get_current_time, get_weather
 
 logger = logging.getLogger(__name__)
@@ -76,5 +77,6 @@ app = App(
     name="app",
     plugins=[
         ModelArmorPlugin(),
+        IntentOutcomeObservabilityPlugin(),
     ],
 )

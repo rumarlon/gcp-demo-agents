@@ -19,6 +19,8 @@ from zoneinfo import ZoneInfo
 
 from pydantic import BaseModel, Field, field_validator
 
+from app.app_utils.observability_plugin import track_tool_intent_outcome
+
 logger = logging.getLogger(__name__)
 
 
@@ -76,6 +78,7 @@ def build_guided_error_response(
     }
 
 
+@track_tool_intent_outcome
 def get_weather(location: str, units: str = "fahrenheit") -> Dict[str, Any]:
     """Simulates getting weather information for a specified location.
 
@@ -135,6 +138,7 @@ def get_weather(location: str, units: str = "fahrenheit") -> Dict[str, Any]:
     }
 
 
+@track_tool_intent_outcome
 def get_current_time(location: str) -> Dict[str, Any]:
     """Simulates getting the current time for a city or location.
 
