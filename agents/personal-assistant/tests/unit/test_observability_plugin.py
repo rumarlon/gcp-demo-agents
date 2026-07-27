@@ -119,12 +119,8 @@ def test_track_tool_intent_outcome_decorator(caplog):
 
     # Check outcome log
     assert any("TOOL OUTCOME:" in record.message for record in caplog.records)
-    outcome_record = next(
-        r for r in caplog.records if "TOOL OUTCOME:" in r.message
-    )
-    outcome_payload = json.loads(
-        outcome_record.message.split("TOOL OUTCOME: ")[1]
-    )
+    outcome_record = next(r for r in caplog.records if "TOOL OUTCOME:" in r.message)
+    outcome_payload = json.loads(outcome_record.message.split("TOOL OUTCOME: ")[1])
     assert outcome_payload["event_type"] == "tool_outcome"
     assert outcome_payload["tool_name"] == "dummy_tool"
     assert outcome_payload["status"] == "success"
