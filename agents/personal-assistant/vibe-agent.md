@@ -21,15 +21,27 @@ While `agy` does the coding, this guide explains **exactly what is happening beh
 
 ## 🛠️ Step 0: Prerequisites & Initial Environment
 
-1. **Install `uv` (Fast Python Package Manager)**:
+1. **Set Up Google Antigravity (`agy`)**:
+   Choose one of the following options to run Antigravity:
+   - **Option A: Google Antigravity Desktop App / IDE**: Download and open the standalone Antigravity IDE application on your machine.
+   - **Option B: Antigravity CLI (`agy`)**: Install and run `agy` directly in your terminal:
+     ```bash
+     uv tool install agy
+     # Or launch agy directly:
+     agy
+     ```
+
+2. **Install `uv` (Fast Python Package Manager)**:
    ```bash
    curl -LsSf https://astral.sh/uv/install.sh | sh
    ```
-2. **Install `google-agents-cli`**:
+
+3. **Install `google-agents-cli`**:
    ```bash
    uv tool install google-agents-cli
    ```
-3. **Authenticate Google Cloud SDK**:
+
+4. **Authenticate Google Cloud SDK**:
    ```bash
    gcloud auth login
    gcloud auth application-default login
