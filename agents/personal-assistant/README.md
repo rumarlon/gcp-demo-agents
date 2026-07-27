@@ -86,7 +86,7 @@ sequenceDiagram
 - **Python**: `3.12` or higher
 - **Package Manager**: [`uv`](https://astral.sh/uv) (recommended)
 - **Google Cloud SDK**: `gcloud` CLI installed and authenticated
-- **Google Antigravity (`agy`)**: (Optional AI Pair Programmer)
+- **Google Antigravity (`agy`)**: (Optional but recommended)
   - **Desktop App**: Download from [antigravity.google/download](https://antigravity.google/download)
   - **Antigravity CLI**: `uv tool install agy` (launch with `agy` in terminal)
 - **Google Agents CLI (`agents-cli`)**: `uv tool install google-agents-cli`

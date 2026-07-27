@@ -58,7 +58,7 @@ gcp-agents/
    gcloud auth application-default login
    ```
 
-4. **Google Antigravity (`agy`)** (Optional AI Pair Programmer):
+4. **Google Antigravity (`agy`)** (Optional but recommended):
    - **Desktop App**: Download and launch the Google Antigravity desktop app from [antigravity.google/download](https://antigravity.google/download).
    - **Antigravity CLI (`agy`)**: Install and run `agy` directly in your terminal:
      ```bash
