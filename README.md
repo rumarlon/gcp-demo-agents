@@ -41,18 +41,24 @@ gcp-agents/
 
 ## 🛠️ Prerequisites & Setup
 
-To develop, test, or deploy agents in this repository, ensure you have the following installed:
+1. **Clone the Repository**:
+   ```bash
+   git clone https://github.com/rumarlon/gcp-agents.git
+   cd gcp-agents
+   ```
 
-1. **Python 3.12+** and **`uv` package manager**:
+2. **Python 3.12+** and **`uv` package manager**:
    ```bash
    curl -LsSf https://astral.sh/uv/install.sh | sh
    ```
-2. **Google Cloud SDK (`gcloud`)**:
+
+3. **Google Cloud SDK (`gcloud`)**:
    ```bash
    gcloud auth login
    gcloud auth application-default login
    ```
-3. **Google Antigravity (`agy`)** (Optional AI Pair Programmer):
+
+4. **Google Antigravity (`agy`)** (Optional AI Pair Programmer):
    - **Desktop App**: Download and launch the Google Antigravity desktop app from [antigravity.google/download](https://antigravity.google/download).
    - **Antigravity CLI (`agy`)**: Install and run `agy` directly in your terminal:
      ```bash
@@ -60,7 +66,8 @@ To develop, test, or deploy agents in this repository, ensure you have the follo
      # Launch agy in your terminal:
      agy
      ```
-4. **Google Agents CLI (`agents-cli`)**:
+
+5. **Google Agents CLI (`agents-cli`)**:
    ```bash
    uv tool install google-agents-cli
    ```
@@ -69,7 +76,8 @@ To develop, test, or deploy agents in this repository, ensure you have the follo
 You can immediately clone this repository and test agents locally without creating GCP cloud resources, Agent Gateways, or Gemini Enterprise apps:
 
 ```bash
-cd agents/personal-assistant
+git clone https://github.com/rumarlon/gcp-agents.git
+cd gcp-agents/agents/personal-assistant
 uv sync --dev
 uv run agents-cli playground
 ```
