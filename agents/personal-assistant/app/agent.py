@@ -24,49 +24,11 @@ from google.genai import types
 
 from app.app_utils.memory_tool import CachedPreloadMemoryTool
 from app.app_utils.model_armor_plugin import ModelArmorPlugin
+from app.app_utils.tools import get_current_time, get_weather
 
 logger = logging.getLogger(__name__)
 
 MODEL = "gemini-3.6-flash"
-
-
-def get_weather(query: str) -> str:
-    """Simulates getting weather information for a location.
-
-    Args:
-        query: A string containing the location to get weather information for.
-
-    Returns:
-        A string with simulated weather information for the queried location.
-    """
-    if "sf" in query.lower() or "san francisco" in query.lower():
-        return "It's 60 degrees and foggy."
-    return "It's 75 degrees and sunny."
-
-
-def get_current_time(query: str) -> str:
-    """Simulates getting the current time for a city.
-
-    Args:
-        query: The name of the city to get the current time for.
-
-    Returns:
-        A string with the current time information.
-    """
-    if "sf" in query.lower() or "san francisco" in query.lower():
-        tz_identifier = "America/Los_Angeles"
-    elif "tokyo" in query.lower():
-        tz_identifier = "Asia/Tokyo"
-    elif "london" in query.lower():
-        tz_identifier = "Europe/London"
-    elif "new york" in query.lower() or "nyc" in query.lower():
-        tz_identifier = "America/New_York"
-    else:
-        tz_identifier = "UTC"
-
-    tz = ZoneInfo(tz_identifier)
-    now = datetime.datetime.now(tz)
-    return f"The current time in {query} is {now.strftime('%Y-%m-%d %H:%M:%S %Z%z')}."
 
 
 async def generate_memories_callback(callback_context: CallbackContext):
@@ -90,7 +52,8 @@ root_agent = Agent(
         "- ACKNOWLEDGE INTRODUCTIONS & STATEMENTS: When the user introduces themselves (e.g., 'My name is Marlon', 'I'm Alex'), shares personal details, or updates preferences, ALWAYS acknowledge them immediately with a warm greeting and confirmation (e.g., 'Nice to meet you, Marlon! I've noted that down. How can I help you today?').\n\n"
         "TOOL USAGE GUIDELINES:\n"
         "- Only invoke weather or time tools when the user explicitly requests weather or current time information.\n"
-        "- For casual statements, general conversation, or greetings, respond conversationally without calling weather or time tools.\n\n"
+        "- For casual statements, general conversation, or greetings, respond conversationally without calling weather or time tools.\n"
+        "- ERROR RECOVERY: If a tool returns a response with status 'error', inspect the provided 'suggestion' field and follow its guidance to politely ask the user for clarification or offer supported options.\n\n"
         "RULES FOR USING MEMORIES:\n"
         "- PERSONALIZED GREETINGS: When the user greets you (e.g., 'hello', 'hi', 'good morning', 'hey'), "
         "check the <PAST_CONVERSATIONS> memory context or current conversation. If you know the user's name or preferred name, "
