@@ -220,33 +220,60 @@ To protect your agent against **prompt injection, jailbreaks, PII/sensitive data
 
 ### 1. Gemini Enterprise App Model Armor Configuration
 
-You can enable Model Armor directly on your Gemini Enterprise App engine:
+Model Armor templates define security policies (e.g. prompt injection detection, jailbreak filters, malicious URLs, CSAM, sensitive PII leakage).
 
-- **App Engine ID**: `<YOUR_APP_ID>`
-- **Project**: `<YOUR_PROJECT_ID>`
-- **Location**: `<YOUR_LOCATION>`
-- **Full Template Resource Path**:
-  ```text
-  projects/<YOUR_PROJECT_ID>/locations/<YOUR_LOCATION>/templates/<YOUR_TEMPLATE_ID>
-  ```
-- **Direct Console Link**: `https://console.cloud.google.com/gemini-enterprise/locations/<YOUR_LOCATION>/engines/<YOUR_APP_ID>/security/configuration?project=<YOUR_PROJECT_ID>`
+#### How Model Armor Templates are Generated and Updated in GCP:
 
-#### CLI Setup via `gcloud`
+You can generate and upload Model Armor templates to GCP using **3 different methods**:
+
+##### Method 1: Google Cloud CLI (`gcloud`)
 1. **Enable Model Armor API**:
    ```bash
    gcloud services enable modelarmor.googleapis.com --project=<YOUR_PROJECT_ID>
    ```
 
-2. **Create a Model Armor Security Template**:
+2. **Generate & Upload Template**:
    ```bash
    gcloud model-armor templates create <YOUR_TEMPLATE_ID> \
      --project=<YOUR_PROJECT_ID> \
      --location=<YOUR_LOCATION> \
-     --filter-config="pi_and_jailbreak_filter_settings={confidence_level=HIGH}"
+     --filter-config="pi_and_jailbreak_filter_settings={confidence_level=HIGH},malicious_uri_filter_settings={filter_enforcement=ENABLED}"
    ```
 
-3. **Link Template to Gemini Enterprise Engine**:
-   In the [Gemini Enterprise Security Configuration Console](https://console.cloud.google.com/gemini-enterprise/locations/<YOUR_LOCATION>/engines/<YOUR_APP_ID>/security/configuration?project=<YOUR_PROJECT_ID>), select your created template (`projects/<YOUR_PROJECT_ID>/locations/<YOUR_LOCATION>/templates/<YOUR_TEMPLATE_ID>`) under **User Prompt Template** and **Response Template**.
+##### Method 2: Programmatic REST API / `curl`
+You can generate templates via REST API request to the Model Armor service:
+```bash
+curl -X POST \
+  -H "Authorization: Bearer $(gcloud auth application-default print-access-token)" \
+  -H "X-Goog-User-Project: <YOUR_PROJECT_ID>" \
+  -H "Content-Type: application/json" \
+  "https://modelarmor.<YOUR_LOCATION>.rep.googleapis.com/v1/projects/<YOUR_PROJECT_ID>/locations/<YOUR_LOCATION>/templates?templateId=<YOUR_TEMPLATE_ID>" \
+  -d '{
+    "filterConfig": {
+      "piAndJailbreakFilterSettings": {
+        "filterEnforcement": "ENABLED",
+        "confidenceLevel": "HIGH"
+      },
+      "maliciousUriFilterSettings": {
+        "filterEnforcement": "ENABLED"
+      }
+    }
+  }'
+```
+
+##### Method 3: Google Cloud Console UI
+1. Navigate to **Gemini Enterprise > Security > Configuration**:
+   `https://console.cloud.google.com/gemini-enterprise/locations/<YOUR_LOCATION>/engines/<YOUR_APP_ID>/security/configuration?project=<YOUR_PROJECT_ID>`
+2. Click **Create Security Template** or **Configure Model Armor**.
+3. Select desired security policies (Prompt Injection, Jailbreak, Malicious URLs, Sensitive Data / PII).
+4. Click **Save**. GCP generates the template resource automatically.
+
+#### Attaching the Template to Gemini Enterprise:
+Once the template is generated in GCP, copy its full resource path:
+```text
+projects/<YOUR_PROJECT_ID>/locations/<YOUR_LOCATION>/templates/<YOUR_TEMPLATE_ID>
+```
+In the [Gemini Enterprise Security Console](https://console.cloud.google.com/gemini-enterprise/locations/<YOUR_LOCATION>/engines/<YOUR_APP_ID>/security/configuration?project=<YOUR_PROJECT_ID>), select this template for both **User Prompt Template** and **Response Template** and click **Save**.
 
 ### 2. ADK Plugin Backend Protection (`ModelArmorPlugin`)
 
