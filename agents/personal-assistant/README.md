@@ -237,7 +237,7 @@ You can generate and upload Model Armor templates to GCP using **3 different met
    gcloud model-armor templates create <YOUR_TEMPLATE_ID> \
      --project=<YOUR_PROJECT_ID> \
      --location=<YOUR_LOCATION> \
-     --filter-config="pi_and_jailbreak_filter_settings={confidence_level=HIGH},malicious_uri_filter_settings={filter_enforcement=ENABLED}"
+     --filter-config="pi_and_jailbreak_filter_settings={confidence_level=HIGH},malicious_uri_filter_settings={filter_enforcement=ENABLED},rai_settings={rai_filters=[{filter_type=HATE_SPEECH,confidence_level=MEDIUM_AND_ABOVE},{filter_type=HARASSMENT,confidence_level=MEDIUM_AND_ABOVE},{filter_type=DANGEROUS,confidence_level=MEDIUM_AND_ABOVE},{filter_type=SEXUALLY_EXPLICIT,confidence_level=MEDIUM_AND_ABOVE}]}"
    ```
 
 ##### Method 2: Programmatic REST API / `curl`
@@ -256,6 +256,14 @@ curl -X POST \
       },
       "maliciousUriFilterSettings": {
         "filterEnforcement": "ENABLED"
+      },
+      "raiSettings": {
+        "raiFilters": [
+          { "filterType": "HATE_SPEECH", "confidenceLevel": "MEDIUM_AND_ABOVE" },
+          { "filterType": "HARASSMENT", "confidenceLevel": "MEDIUM_AND_ABOVE" },
+          { "filterType": "DANGEROUS", "confidenceLevel": "MEDIUM_AND_ABOVE" },
+          { "filterType": "SEXUALLY_EXPLICIT", "confidenceLevel": "MEDIUM_AND_ABOVE" }
+        ]
       }
     }
   }'
@@ -265,7 +273,10 @@ curl -X POST \
 1. Navigate to **Gemini Enterprise > Security > Configuration**:
    `https://console.cloud.google.com/gemini-enterprise/locations/<YOUR_LOCATION>/engines/<YOUR_APP_ID>/security/configuration?project=<YOUR_PROJECT_ID>`
 2. Click **Create Security Template** or **Configure Model Armor**.
-3. Select desired security policies (Prompt Injection, Jailbreak, Malicious URLs, Sensitive Data / PII).
+3. Select desired security policies:
+   - **Prompt Injection & Jailbreak**: High confidence
+   - **Malicious URLs**: Enabled
+   - **Responsible AI Safety Filters** (`MEDIUM_AND_ABOVE`): Hate Speech, Harassment, Dangerous Content, Sexually Explicit
 4. Click **Save**. GCP generates the template resource automatically.
 
 #### Attaching the Template to Gemini Enterprise:
