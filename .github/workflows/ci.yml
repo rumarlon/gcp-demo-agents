@@ -31,7 +31,12 @@ jobs:
           cd agents/${{ matrix.agent }}
           uv sync --dev
 
-      - name: Run Tests
+      - name: Check Formatting
         run: |
           cd agents/${{ matrix.agent }}
-          uv run pytest
+          uv run black --check .
+
+      - name: Run Unit Tests
+        run: |
+          cd agents/${{ matrix.agent }}
+          uv run pytest tests/unit

@@ -64,7 +64,9 @@ def get_session_service():
 def get_memory_service():
     """Process-wide memory service backed by Vertex AI Memory Bank in production."""
     if agent_engine_id := os.environ.get("GOOGLE_CLOUD_AGENT_ENGINE_ID"):
-        from google.adk.memory.vertex_ai_memory_bank_service import VertexAiMemoryBankService
+        from google.adk.memory.vertex_ai_memory_bank_service import (
+            VertexAiMemoryBankService,
+        )
 
         return VertexAiMemoryBankService(
             project=os.environ.get("GOOGLE_CLOUD_PROJECT"),

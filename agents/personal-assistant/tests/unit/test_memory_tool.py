@@ -35,10 +35,14 @@ async def test_cached_preload_memory_tool_skips_tool_response_turn() -> None:
     # LlmRequest ending with a function_response turn
     llm_request = LlmRequest()
     llm_request.contents = [
-        types.Content(role="user", parts=[types.Part.from_text(text="What is the weather?")]),
+        types.Content(
+            role="user", parts=[types.Part.from_text(text="What is the weather?")]
+        ),
         types.Content(
             role="model",
-            parts=[types.Part.from_function_call(name="get_weather", args={"query": "NYC"})],
+            parts=[
+                types.Part.from_function_call(name="get_weather", args={"query": "NYC"})
+            ],
         ),
         types.Content(
             role="user",

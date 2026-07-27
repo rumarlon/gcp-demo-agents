@@ -13,6 +13,7 @@
 # limitations under the License.
 
 from dotenv import load_dotenv
+
 load_dotenv()
 
 import pytest
@@ -40,9 +41,7 @@ async def test_memory_bank_integration():
     user_id = "test_user_42"
 
     # Step 1: Create Session 1
-    session1 = await session_service.create_session(
-        app_name="app", user_id=user_id
-    )
+    session1 = await session_service.create_session(app_name="app", user_id=user_id)
 
     # Step 2: Send user message containing a specific preference
     message = types.Content(
@@ -61,7 +60,9 @@ async def test_memory_bank_integration():
     assert len(response_events) > 0
 
     # Step 3: Explicitly sync session to memory bank service
-    session1 = await session_service.get_session(app_name="app", user_id=user_id, session_id=session1.id)
+    session1 = await session_service.get_session(
+        app_name="app", user_id=user_id, session_id=session1.id
+    )
     await memory_service.add_session_to_memory(session1)
 
     # Step 4: Search memory bank for user preferences
@@ -85,9 +86,7 @@ async def test_agent_tool_execution():
     )
 
     user_id = "test_user_1"
-    session = await session_service.create_session(
-        app_name="app", user_id=user_id
-    )
+    session = await session_service.create_session(app_name="app", user_id=user_id)
 
     message = types.Content(
         role="user",
@@ -128,13 +127,21 @@ async def test_personalized_greeting_from_memory():
     session1 = await session_service.create_session(app_name="app", user_id=user_id)
     msg1 = types.Content(
         role="user",
-        parts=[types.Part.from_text(text="Hello, my name is Marlon and I live in San Francisco.")],
+        parts=[
+            types.Part.from_text(
+                text="Hello, my name is Marlon and I live in San Francisco."
+            )
+        ],
     )
-    async for _ in runner.run_async(user_id=user_id, session_id=session1.id, new_message=msg1):
+    async for _ in runner.run_async(
+        user_id=user_id, session_id=session1.id, new_message=msg1
+    ):
         pass
 
     # Fetch updated session containing recorded events from session_service
-    session1 = await session_service.get_session(app_name="app", user_id=user_id, session_id=session1.id)
+    session1 = await session_service.get_session(
+        app_name="app", user_id=user_id, session_id=session1.id
+    )
     await memory_service.add_session_to_memory(session1)
 
     # Session 2: New session, user says 'Hello!'
@@ -145,7 +152,9 @@ async def test_personalized_greeting_from_memory():
     )
 
     response_texts = []
-    async for event in runner.run_async(user_id=user_id, session_id=session2.id, new_message=msg2):
+    async for event in runner.run_async(
+        user_id=user_id, session_id=session2.id, new_message=msg2
+    ):
         if event.content and event.content.parts:
             for part in event.content.parts:
                 if part.text:
@@ -174,12 +183,20 @@ async def test_cross_session_preference_recall():
     session1 = await session_service.create_session(app_name="app", user_id=user_id)
     msg1 = types.Content(
         role="user",
-        parts=[types.Part.from_text(text="My absolute favorite coffee is an oat milk latte.")],
+        parts=[
+            types.Part.from_text(
+                text="My absolute favorite coffee is an oat milk latte."
+            )
+        ],
     )
-    async for _ in runner.run_async(user_id=user_id, session_id=session1.id, new_message=msg1):
+    async for _ in runner.run_async(
+        user_id=user_id, session_id=session1.id, new_message=msg1
+    ):
         pass
 
-    session1 = await session_service.get_session(app_name="app", user_id=user_id, session_id=session1.id)
+    session1 = await session_service.get_session(
+        app_name="app", user_id=user_id, session_id=session1.id
+    )
     await memory_service.add_session_to_memory(session1)
 
     # Session 2: Open-ended coffee question
@@ -190,7 +207,9 @@ async def test_cross_session_preference_recall():
     )
 
     response_texts = []
-    async for event in runner.run_async(user_id=user_id, session_id=session2.id, new_message=msg2):
+    async for event in runner.run_async(
+        user_id=user_id, session_id=session2.id, new_message=msg2
+    ):
         if event.content and event.content.parts:
             for part in event.content.parts:
                 if part.text:
@@ -198,4 +217,3 @@ async def test_cross_session_preference_recall():
 
     full_response = " ".join(response_texts)
     assert "oat milk" in full_response.lower() or "latte" in full_response.lower()
-
