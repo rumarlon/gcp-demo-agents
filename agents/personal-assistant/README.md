@@ -14,6 +14,7 @@ An experimental personalized AI assistant built with the **Google Agent Developm
 - **Real-time Tool Execution**: Includes function declarations for retrieving current weather and time information.
 - **Agent-to-Agent (A2A) Protocol**: Built-in FastAPI endpoints supporting A2A inter-agent communication.
 - **Enterprise Ready**: Fully deployed to Vertex AI Agent Runtime and integrated with Gemini Enterprise App & Agent Gateway.
+- **Multi-User Workshop Ready**: Includes a dedicated [Workshop Deployment Guide](WORKSHOP.md) for running multi-user hands-on labs without agent naming collisions.
 
 ---
 

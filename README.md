@@ -41,6 +41,7 @@ gcp-demo-agents/
         ├── Dockerfile             # Container definition
         ├── GEMINI.md              # Agent system prompt & personality guidance
         ├── vibe-agent.md          # Step-by-step vibe coding guide for this app with agy
+        ├── WORKSHOP.md            # Multi-user workshop deployment guide
         └── README.md              # Detailed Agent documentation & architecture diagram
 ```
 
