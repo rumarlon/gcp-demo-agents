@@ -185,10 +185,10 @@ If you want to integrate your deployed agent with **Gemini Enterprise** or **Age
 - A Google Cloud Project with **Gemini Enterprise** (formerly Vertex AI Search and Conversation / Agent Builder) enabled.
 - An existing Gemini Enterprise App/Engine. You can find your App ID in the [Vertex AI Search & Conversation Console](https://console.cloud.google.com/gen-app-builder/engines).
 
-#### Step 1: Create an Agent Gateway (Using `gcloud` / REST API)
-1. **Enable the Agent Gateway API**:
+#### Step 1: Create an Agent Gateway (Using REST API / `gcloud`)
+1. **Enable the Network Services API**:
    ```bash
-   gcloud services enable agentgateway.googleapis.com --project=<YOUR_PROJECT_ID>
+   gcloud services enable networkservices.googleapis.com --project=<YOUR_PROJECT_ID>
    ```
 
 2. **Create an Agent Gateway Instance via `curl` REST API**:
@@ -196,16 +196,28 @@ If you want to integrate your deployed agent with **Gemini Enterprise** or **Age
    curl -X POST \
      -H "Authorization: Bearer $(gcloud auth print-access-token)" \
      -H "Content-Type: application/json" \
-     "https://agentgateway.googleapis.com/v1/projects/<YOUR_PROJECT_ID>/locations/us-central1/gateways?gatewayId=<YOUR_GATEWAY_NAME>" \
+     "https://networkservices.googleapis.com/v1/projects/<YOUR_PROJECT_ID>/locations/<YOUR_LOCATION>/agentGateways?agentGatewayId=<YOUR_GATEWAY_NAME>" \
      -d '{
-       "displayName": "My Agent Gateway",
-       "description": "Agent Gateway for inter-agent A2A routing"
+       "googleManaged": {
+         "governedAccessPath": "AGENT_TO_ANYWHERE"
+       }
      }'
    ```
 
-3. **Obtain Gateway Resource Path**:
+3. **Check Creation Completion Status**:
+   Creating an Agent Gateway is an asynchronous Long-Running Operation (LRO). You can poll the operation status using the returned operation path:
+   ```bash
+   curl -H "Authorization: Bearer $(gcloud auth print-access-token)" \
+     "https://networkservices.googleapis.com/v1/projects/<YOUR_PROJECT_ID>/locations/<YOUR_LOCATION>/operations/<OPERATION_ID>"
+   ```
+   Or list your active Agent Gateways once provisioning completes (usually 1-3 minutes):
+   ```bash
+   gcloud network-services agent-gateways list --location=<YOUR_LOCATION>
+   ```
+
+4. **Obtain Gateway Resource Path**:
    Your created Agent Gateway resource path follows this format:
-   `projects/<YOUR_PROJECT_NUMBER>/locations/us-central1/gateways/<YOUR_GATEWAY_NAME>`
+   `projects/<YOUR_PROJECT_NUMBER>/locations/<YOUR_LOCATION>/agentGateways/<YOUR_GATEWAY_NAME>`
 
 #### Step 2: Publish Agent to Gemini Enterprise
 Register your deployed Reasoning Engine with your Gemini Enterprise App and Agent Gateway:
