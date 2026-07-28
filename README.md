@@ -3,7 +3,7 @@
 > [!IMPORTANT]
 > **Disclaimer & Usage Notice**: This repository and its sample code are provided "as-is" for educational and demonstration purposes, without warranty or liability of any kind. Executing, testing, or deploying these agents may incur Google Cloud Platform (GCP) charges (such as Vertex AI API calls, Reasoning Engine deployments, or Memory Bank usage). Please monitor your GCP billing dashboard and resource usage accordingly.
 
-Welcome to the **gcp-agents** repository! This repository hosts a collection of production-ready AI agents built with the [Google Agent Development Kit (ADK)](https://github.com/google/adk) and deployed on **Google Cloud Platform (GCP)** via **Vertex AI Agent Engine (Reasoning Engine)**, **Agent Gateway**, and **Gemini Enterprise**.
+Welcome to the **gcp-demo-agents** repository! This repository hosts a collection of production-ready AI agents built with the [Google Agent Development Kit (ADK)](https://github.com/google/adk) and deployed on **Google Cloud Platform (GCP)** via **Vertex AI Agent Engine (Reasoning Engine)**, **Agent Gateway**, and **Gemini Enterprise**.
 
 Each agent in this repository is designed as an isolated, modular subproject with its own dependencies, tests, deployment configuration, and documentation.
 
@@ -20,7 +20,7 @@ Each agent in this repository is designed as an isolated, modular subproject wit
 ## 📂 Repository Layout
 
 ```text
-gcp-agents/
+gcp-demo-agents/
 ├── README.md                      # Top-level repository overview & guidelines
 ├── .gitignore                     # Global git ignore policy
 ├── LICENSE                        # Apache 2.0 Open Source License
@@ -50,8 +50,8 @@ gcp-agents/
 
 1. **Clone the Repository**:
    ```bash
-   git clone https://github.com/rumarlon/gcp-agents.git
-   cd gcp-agents
+   git clone https://github.com/rumarlon/gcp-demo-agents.git
+   cd gcp-demo-agents
    ```
 
 2. **Python 3.12+** and **`uv` package manager**:
@@ -86,8 +86,8 @@ gcp-agents/
 You can immediately clone this repository and test agents locally without creating GCP cloud resources, Agent Gateways, or Gemini Enterprise apps:
 
 ```bash
-git clone https://github.com/rumarlon/gcp-agents.git
-cd gcp-agents/agents/personal-assistant
+git clone https://github.com/rumarlon/gcp-demo-agents.git
+cd gcp-demo-agents/agents/personal-assistant
 uv sync --dev
 uv run agents-cli playground
 ```
