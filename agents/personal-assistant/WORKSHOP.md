@@ -110,10 +110,8 @@ Agent Card URL: https://us-central1-aiplatform.googleapis.com/reasoningEngines/v
 To register your deployed agent into Gemini Enterprise without colliding with other participants:
 
 ```bash
-# Register unique agent with Gemini Enterprise
-agents-cli publish gemini-enterprise \
-  --project="<YOUR_PROJECT_ID>" \
-  --location="us-central1"
+# Register unique agent with Gemini Enterprise interactively
+agents-cli publish gemini-enterprise --interactive
 ```
 
 Because your agent has a unique display name (`personal-assistant-alice`), GEAP will register it as a distinct tool/agent in the Enterprise catalog.

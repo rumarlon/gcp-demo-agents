@@ -220,15 +220,32 @@ If you want to integrate your deployed agent with **Gemini Enterprise** or **Age
    `projects/<YOUR_PROJECT_NUMBER>/locations/<YOUR_LOCATION>/agentGateways/<YOUR_GATEWAY_NAME>`
 
 #### Step 2: Publish Agent to Gemini Enterprise
-Register your deployed Reasoning Engine with your Gemini Enterprise App and Agent Gateway:
+Register your deployed agent with your Gemini Enterprise App.
+
+##### Option A: Interactive Discovery Mode (Recommended)
+Launch the interactive wizard to automatically discover your local deployment metadata and select from your existing Gemini Enterprise apps:
 ```bash
-agents-cli publish gemini-enterprise \
-  --app-id "projects/<YOUR_PROJECT_NUMBER>/locations/us/collections/default_collection/engines/<YOUR_APP_ID>" \
-  --agent-gateway "projects/<YOUR_PROJECT_NUMBER>/locations/<LOCATION>/gateways/<YOUR_AGENT_GATEWAY_NAME>"
+agents-cli publish gemini-enterprise --interactive
 ```
 
-> [!NOTE]
-> Replace `<YOUR_PROJECT_NUMBER>`, `<YOUR_LOCATION>`, `<YOUR_APP_ID>`, and `<YOUR_AGENT_GATEWAY_NAME>` with your specific GCP resource values. Do not commit actual project numbers or private gateway names to git.
+##### Option B: Programmatic Mode
+If running in automated CI/CD pipelines, first list your available Gemini Enterprise Apps to get the full resource name (`--gemini-enterprise-app-id`):
+
+1. **List Gemini Enterprise Apps**:
+   ```bash
+   agents-cli publish gemini-enterprise --list --project-id <YOUR_PROJECT_ID>
+   ```
+
+2. **Publish Agent**:
+   ```bash
+   agents-cli publish gemini-enterprise \
+     --project-id "<YOUR_PROJECT_ID>" \
+     --gemini-enterprise-app-id "projects/<YOUR_PROJECT_NUMBER>/locations/<LOCATION>/collections/default_collection/engines/<YOUR_APP_ENGINE_ID>"
+   ```
+
+> [!IMPORTANT]
+> - Do **not** pass your Reasoning Engine ID (e.g., numeric string `719...`) as `--gemini-enterprise-app-id`. The `--gemini-enterprise-app-id` flag requires the Gemini Enterprise App engine name (`engines/<YOUR_APP_ENGINE_ID>`).
+> - Gemini Enterprise Apps are typically hosted in multi-region locations (e.g., `locations/us` or `locations/global`), whereas Reasoning Engines are hosted in specific regions (e.g., `locations/us-central1`). Verify the correct location using `agents-cli publish gemini-enterprise --list`.
 
 ---
 
