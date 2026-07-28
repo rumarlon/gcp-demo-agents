@@ -222,7 +222,7 @@ If you want to integrate your deployed agent with **Gemini Enterprise** or **Age
 #### Step 2: Publish Agent to Gemini Enterprise
 Register your deployed agent with your Gemini Enterprise App.
 
-##### Option A: Interactive Discovery Mode (Recommended)
+##### Option A: Interactive Discovery Mode (Recommended for simplicity/learning, not programmatic)
 Launch the interactive wizard to automatically discover your local deployment metadata and select from your existing Gemini Enterprise apps:
 ```bash
 agents-cli publish gemini-enterprise --interactive
