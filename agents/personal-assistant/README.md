@@ -14,6 +14,7 @@ An experimental personalized AI assistant built with the **Google Agent Developm
 - **Real-time Tool Execution**: Includes function declarations for retrieving current weather and time information.
 - **Agent-to-Agent (A2A) Protocol**: Built-in FastAPI endpoints supporting A2A inter-agent communication.
 - **Enterprise Ready**: Fully deployed to Vertex AI Agent Runtime and integrated with Gemini Enterprise App & Agent Gateway.
+- **Multi-User Workshop Ready**: Includes a dedicated [Workshop Deployment Guide](WORKSHOP.md) for running multi-user hands-on labs without agent naming collisions.
 
 ---
 
@@ -184,10 +185,10 @@ If you want to integrate your deployed agent with **Gemini Enterprise** or **Age
 - A Google Cloud Project with **Gemini Enterprise** (formerly Vertex AI Search and Conversation / Agent Builder) enabled.
 - An existing Gemini Enterprise App/Engine. You can find your App ID in the [Vertex AI Search & Conversation Console](https://console.cloud.google.com/gen-app-builder/engines).
 
-#### Step 1: Create an Agent Gateway (Using `gcloud` / REST API)
-1. **Enable the Agent Gateway API**:
+#### Step 1: Create an Agent Gateway (Using REST API / `gcloud`)
+1. **Enable the Network Services API**:
    ```bash
-   gcloud services enable agentgateway.googleapis.com --project=<YOUR_PROJECT_ID>
+   gcloud services enable networkservices.googleapis.com --project=<YOUR_PROJECT_ID>
    ```
 
 2. **Create an Agent Gateway Instance via `curl` REST API**:
@@ -195,27 +196,56 @@ If you want to integrate your deployed agent with **Gemini Enterprise** or **Age
    curl -X POST \
      -H "Authorization: Bearer $(gcloud auth print-access-token)" \
      -H "Content-Type: application/json" \
-     "https://agentgateway.googleapis.com/v1/projects/<YOUR_PROJECT_ID>/locations/us-central1/gateways?gatewayId=<YOUR_GATEWAY_NAME>" \
+     "https://networkservices.googleapis.com/v1/projects/<YOUR_PROJECT_ID>/locations/<YOUR_LOCATION>/agentGateways?agentGatewayId=<YOUR_GATEWAY_NAME>" \
      -d '{
-       "displayName": "My Agent Gateway",
-       "description": "Agent Gateway for inter-agent A2A routing"
+       "googleManaged": {
+         "governedAccessPath": "AGENT_TO_ANYWHERE"
+       }
      }'
    ```
 
-3. **Obtain Gateway Resource Path**:
+3. **Check Creation Completion Status**:
+   Creating an Agent Gateway is an asynchronous Long-Running Operation (LRO). You can poll the operation status using the returned operation path:
+   ```bash
+   curl -H "Authorization: Bearer $(gcloud auth print-access-token)" \
+     "https://networkservices.googleapis.com/v1/projects/<YOUR_PROJECT_ID>/locations/<YOUR_LOCATION>/operations/<OPERATION_ID>"
+   ```
+   Or list your active Agent Gateways once provisioning completes (usually 1-3 minutes):
+   ```bash
+   gcloud network-services agent-gateways list --location=<YOUR_LOCATION>
+   ```
+
+4. **Obtain Gateway Resource Path**:
    Your created Agent Gateway resource path follows this format:
-   `projects/<YOUR_PROJECT_NUMBER>/locations/us-central1/gateways/<YOUR_GATEWAY_NAME>`
+   `projects/<YOUR_PROJECT_NUMBER>/locations/<YOUR_LOCATION>/agentGateways/<YOUR_GATEWAY_NAME>`
 
 #### Step 2: Publish Agent to Gemini Enterprise
-Register your deployed Reasoning Engine with your Gemini Enterprise App and Agent Gateway:
+Register your deployed agent with your Gemini Enterprise App.
+
+##### Option A: Interactive Discovery Mode (Recommended for simplicity/learning, not programmatic)
+Launch the interactive wizard to automatically discover your local deployment metadata and select from your existing Gemini Enterprise apps:
 ```bash
-agents-cli publish gemini-enterprise \
-  --app-id "projects/<YOUR_PROJECT_NUMBER>/locations/us/collections/default_collection/engines/<YOUR_APP_ID>" \
-  --agent-gateway "projects/<YOUR_PROJECT_NUMBER>/locations/<LOCATION>/gateways/<YOUR_AGENT_GATEWAY_NAME>"
+agents-cli publish gemini-enterprise --interactive
 ```
 
-> [!NOTE]
-> Replace `<YOUR_PROJECT_NUMBER>`, `<YOUR_LOCATION>`, `<YOUR_APP_ID>`, and `<YOUR_AGENT_GATEWAY_NAME>` with your specific GCP resource values. Do not commit actual project numbers or private gateway names to git.
+##### Option B: Programmatic Mode
+If running in automated CI/CD pipelines, first list your available Gemini Enterprise Apps to get the full resource name (`--gemini-enterprise-app-id`):
+
+1. **List Gemini Enterprise Apps**:
+   ```bash
+   agents-cli publish gemini-enterprise --list --project-id <YOUR_PROJECT_ID>
+   ```
+
+2. **Publish Agent**:
+   ```bash
+   agents-cli publish gemini-enterprise \
+     --project-id "<YOUR_PROJECT_ID>" \
+     --gemini-enterprise-app-id "projects/<YOUR_PROJECT_NUMBER>/locations/<LOCATION>/collections/default_collection/engines/<YOUR_APP_ENGINE_ID>"
+   ```
+
+> [!IMPORTANT]
+> - Do **not** pass your Reasoning Engine ID (e.g., numeric string `719...`) as `--gemini-enterprise-app-id`. The `--gemini-enterprise-app-id` flag requires the Gemini Enterprise App engine name (`engines/<YOUR_APP_ENGINE_ID>`).
+> - Gemini Enterprise Apps are typically hosted in multi-region locations (e.g., `locations/us` or `locations/global`), whereas Reasoning Engines are hosted in specific regions (e.g., `locations/us-central1`). Verify the correct location using `agents-cli publish gemini-enterprise --list`.
 
 ---
 
