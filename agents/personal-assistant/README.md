@@ -186,6 +186,13 @@ If you want to integrate your deployed agent with **Gemini Enterprise** or **Age
 - An existing Gemini Enterprise App/Engine. You can find your App ID in the [Vertex AI Search & Conversation Console](https://console.cloud.google.com/gen-app-builder/engines).
 
 #### Step 1: Create an Agent Gateway (Using REST API / `gcloud`)
+
+> [!NOTE]
+> **Understanding `<YOUR_LOCATION>` for Agent Gateways**:
+> Agent Gateways are provisioned in **specific GCP regions** (such as `us-central1`, `us-east1`, `europe-west1`, `asia-east1`).
+> - Set `<YOUR_LOCATION>` to the GCP region where your Vertex AI Reasoning Engine / agent workload is deployed (e.g., `us-central1`).
+> - **Note**: Unlike Model Armor (which uses multi-regions `us` or `eu`), Agent Gateways require specific regional locations like `us-central1`.
+
 1. **Enable the Network Services API**:
    ```bash
    gcloud services enable networkservices.googleapis.com --project=<YOUR_PROJECT_ID>
