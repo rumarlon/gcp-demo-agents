@@ -85,6 +85,10 @@ uv run agents-cli playground
 
 Access the playground at `http://127.0.0.1:8080` to interact with your agent locally.
 
+> [!TIP]
+> When testing tool calls, note that `get_weather` uses simulated mock data and supports queries for **San Francisco**, **Tokyo**, **London**, and **New York**.
+
+
 ---
 
 ### Step 4: Deploy to Vertex AI Agent Runtime

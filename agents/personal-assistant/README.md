@@ -11,7 +11,7 @@ An experimental personalized AI assistant built with the **Google Agent Developm
 
 - **Warm & Personable Conversational Persona**: Maintains an engaging, helpful tone, acknowledges introductions, and addresses users by name.
 - **Persistent Long-Term Memory**: Automatically extracts, stores, and preloads user facts and preferences across sessions using Vertex AI Memory Bank.
-- **Real-time Tool Execution**: Includes function declarations for retrieving current weather and time information.
+- **Real-time Tool Execution**: Includes function declarations for retrieving current weather and time information *(Note: Weather tool uses simulated mock data supporting **San Francisco**, **Tokyo**, **London**, and **New York**)*.
 - **Agent-to-Agent (A2A) Protocol**: Built-in FastAPI endpoints supporting A2A inter-agent communication.
 - **Enterprise Ready**: Fully deployed to Vertex AI Agent Runtime and integrated with Gemini Enterprise App & Agent Gateway.
 - **Multi-User Workshop Ready**: Includes a dedicated [Workshop Deployment Guide](WORKSHOP.md) for running multi-user hands-on labs without agent naming collisions.
@@ -128,6 +128,11 @@ Launch the interactive web-based Agent Playground locally using `uv run` (to ens
 uv run agents-cli playground
 ```
 This opens an interactive local chat interface in your browser at `http://127.0.0.1:8080` to interact with the agent, test tool calls, and inspect session state.
+
+> [!NOTE]
+> **Simulated Weather Tool Data**:
+> The `get_weather` tool uses simulated mock data and currently supports queries for **San Francisco**, **Tokyo**, **London**, and **New York** (or "NYC"). Querying unsupported locations returns a guided error response listing these supported cities.
+
 
 
 
