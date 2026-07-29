@@ -347,16 +347,20 @@ In the [Gemini Enterprise Security Console](https://console.cloud.google.com/gem
 
 ### 2. ADK Plugin Backend Protection (`ModelArmorPlugin`)
 
-The ADK agent runtime incorporates [`ModelArmorPlugin`](app/app_utils/model_armor_plugin.py) via ADK `BasePlugin`:
+The ADK agent runtime incorporates [`ModelArmorPlugin`](app/app_utils/model_armor_plugin.py) via ADK `BasePlugin`. 
 
-- **Environment Variables**:
+To enable Model Armor backend sanitization during local agent execution, copy `.env.example` to `.env` and configure the Model Armor section:
+
+- **Environment Variables (`.env`)**:
   ```env
   MODEL_ARMOR_PROJECT_ID=<YOUR_PROJECT_ID>
-  MODEL_ARMOR_LOCATION=<YOUR_LOCATION>
+  MODEL_ARMOR_LOCATION=us
   MODEL_ARMOR_TEMPLATE_ID=<YOUR_TEMPLATE_ID>
   MODEL_ARMOR_STRICT_MODE=false
   ```
-- **Behavior**:
-  - `before_model_callback`: Calls `SanitizeUserPrompt` to inspect incoming user prompts.
-  - `after_model_callback`: Calls `SanitizeModelResponse` to inspect outgoing model outputs.
-  - **Graceful Fallback**: If Model Armor is unconfigured in local offline testing, the plugin logs a debug notice and allows traffic to pass without interruption.
+
+- **Runtime Behavior**:
+  - `before_model_callback`: Calls `SanitizeUserPrompt` to inspect incoming user prompts before they reach Gemini.
+  - `after_model_callback`: Calls `SanitizeModelResponse` to inspect outgoing model responses before returning to the client.
+  - **Graceful Fallback**: If these variables are omitted or commented out in `.env`, the plugin gracefully bypasses inspection with a log notice, allowing local offline development without requiring Model Armor.
+
