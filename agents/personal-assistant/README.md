@@ -259,6 +259,13 @@ Model Armor templates define security policies (e.g. prompt injection detection,
 
 #### How Model Armor Templates are Generated and Updated in GCP:
 
+> [!IMPORTANT]
+> **Model Armor Location Selection (`us` vs `eu`)**:
+> - Model Armor uses GCP **multi-region locations**—specifically **`us`** and **`eu`**. It is **not** available in the `global` region.
+> - **Gemini Enterprise Alignment**: Your Model Armor template location must match the multi-region of your Gemini Enterprise App:
+>   - **US Gemini App** → Use location **`us`** (`https://modelarmor.us.rep.googleapis.com/`)
+>   - **EU Gemini App** → Use location **`eu`** (`https://modelarmor.eu.rep.googleapis.com/`)
+
 You can generate and upload Model Armor templates to GCP using **3 different methods**:
 
 ##### Method 1: Google Cloud CLI (`gcloud`)
@@ -267,22 +274,39 @@ You can generate and upload Model Armor templates to GCP using **3 different met
    gcloud services enable modelarmor.googleapis.com --project=<YOUR_PROJECT_ID>
    ```
 
-2. **Generate & Upload Template**:
+2. **Set Multi-Region API Endpoint Override**:
+   Configure `gcloud` to use the endpoint for your Model Armor multi-region (`us` or `eu`):
+   ```bash
+   # For US multi-region:
+   gcloud config set api_endpoint_overrides/modelarmor "https://modelarmor.us.rep.googleapis.com/"
+
+   # For EU multi-region:
+   # gcloud config set api_endpoint_overrides/modelarmor "https://modelarmor.eu.rep.googleapis.com/"
+   ```
+
+3. **Generate & Upload Template**:
    ```bash
    gcloud model-armor templates create <YOUR_TEMPLATE_ID> \
      --project=<YOUR_PROJECT_ID> \
-     --location=<YOUR_LOCATION> \
-     --filter-config="pi_and_jailbreak_filter_settings={confidence_level=HIGH},malicious_uri_filter_settings={filter_enforcement=ENABLED},rai_settings={rai_filters=[{filter_type=HATE_SPEECH,confidence_level=MEDIUM_AND_ABOVE},{filter_type=HARASSMENT,confidence_level=MEDIUM_AND_ABOVE},{filter_type=DANGEROUS,confidence_level=MEDIUM_AND_ABOVE},{filter_type=SEXUALLY_EXPLICIT,confidence_level=MEDIUM_AND_ABOVE}]}"
+     --location=us \
+     --rai-settings-filters='[
+       {"filterType": "HATE_SPEECH", "confidenceLevel": "MEDIUM_AND_ABOVE"},
+       {"filterType": "HARASSMENT", "confidenceLevel": "MEDIUM_AND_ABOVE"},
+       {"filterType": "DANGEROUS", "confidenceLevel": "MEDIUM_AND_ABOVE"},
+       {"filterType": "SEXUALLY_EXPLICIT", "confidenceLevel": "MEDIUM_AND_ABOVE"}
+     ]' \
+     --pi-and-jailbreak-filter-settings-enforcement=enabled \
+     --pi-and-jailbreak-filter-settings-confidence-level=high \
+     --malicious-uri-filter-settings-enforcement=enabled
    ```
 
 ##### Method 2: Programmatic REST API / `curl`
-You can generate templates via REST API request to the Model Armor service:
+You can generate templates via REST API request using the `us` or `eu` multi-region endpoint:
 ```bash
 curl -X POST \
-  -H "Authorization: Bearer $(gcloud auth application-default print-access-token)" \
-  -H "X-Goog-User-Project: <YOUR_PROJECT_ID>" \
+  -H "Authorization: Bearer $(gcloud auth print-access-token)" \
   -H "Content-Type: application/json" \
-  "https://modelarmor.<YOUR_LOCATION>.rep.googleapis.com/v1/projects/<YOUR_PROJECT_ID>/locations/<YOUR_LOCATION>/templates?templateId=<YOUR_TEMPLATE_ID>" \
+  "https://modelarmor.us.rep.googleapis.com/v1/projects/<YOUR_PROJECT_ID>/locations/us/templates?templateId=<YOUR_TEMPLATE_ID>" \
   -d '{
     "filterConfig": {
       "piAndJailbreakFilterSettings": {
@@ -323,16 +347,20 @@ In the [Gemini Enterprise Security Console](https://console.cloud.google.com/gem
 
 ### 2. ADK Plugin Backend Protection (`ModelArmorPlugin`)
 
-The ADK agent runtime incorporates [`ModelArmorPlugin`](app/app_utils/model_armor_plugin.py) via ADK `BasePlugin`:
+The ADK agent runtime incorporates [`ModelArmorPlugin`](app/app_utils/model_armor_plugin.py) via ADK `BasePlugin`. 
 
-- **Environment Variables**:
+To enable Model Armor backend sanitization during local agent execution, copy `.env.example` to `.env` and configure the Model Armor section:
+
+- **Environment Variables (`.env`)**:
   ```env
   MODEL_ARMOR_PROJECT_ID=<YOUR_PROJECT_ID>
-  MODEL_ARMOR_LOCATION=<YOUR_LOCATION>
+  MODEL_ARMOR_LOCATION=us
   MODEL_ARMOR_TEMPLATE_ID=<YOUR_TEMPLATE_ID>
   MODEL_ARMOR_STRICT_MODE=false
   ```
-- **Behavior**:
-  - `before_model_callback`: Calls `SanitizeUserPrompt` to inspect incoming user prompts.
-  - `after_model_callback`: Calls `SanitizeModelResponse` to inspect outgoing model outputs.
-  - **Graceful Fallback**: If Model Armor is unconfigured in local offline testing, the plugin logs a debug notice and allows traffic to pass without interruption.
+
+- **Runtime Behavior**:
+  - `before_model_callback`: Calls `SanitizeUserPrompt` to inspect incoming user prompts before they reach Gemini.
+  - `after_model_callback`: Calls `SanitizeModelResponse` to inspect outgoing model responses before returning to the client.
+  - **Graceful Fallback**: If these variables are omitted or commented out in `.env`, the plugin gracefully bypasses inspection with a log notice, allowing local offline development without requiring Model Armor.
+
